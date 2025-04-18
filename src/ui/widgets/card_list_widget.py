@@ -1,16 +1,16 @@
-# src/ui/widgets/card_list_widget.py
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QListWidget, QListWidgetItem, QPushButton,
-    QMenu, QAbstractItemView, QMessageBox
+    QMenu, QAbstractItemView, QMessageBox,
+    QSizePolicy, QToolButton, QFrame, QScrollArea
 )
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal, QSize
 from PyQt6.QtGui import QAction, QIcon, QFont
 from src.utils.logger import get_logger
 from src.utils.error_handling import handle_errors
 
 class CardListWidget(QWidget):
-    """Widget for displaying and managing a list of flashcards."""
+    """Widget for displaying and managing a list of flashcards with responsive layout."""
     
     # Signals for communication with parent widgets
     card_selected = pyqtSignal(str)  # Emits card ID when selected
@@ -27,6 +27,9 @@ class CardListWidget(QWidget):
         # Store cards data for reference
         self.cards = {}  # card_id -> card object
         
+        # Track UI state
+        self.is_compact_mode = False
+        
         # Setup UI
         self.setup_ui()
     
@@ -41,6 +44,7 @@ class CardListWidget(QWidget):
         # Create header and instructions
         self.header_label = QLabel("Flashcards")
         self.header_label.setStyleSheet("font-weight: bold;")
+        self.header_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         layout.addWidget(self.header_label)
         
         # Create list widget
@@ -51,6 +55,28 @@ class CardListWidget(QWidget):
         self.list_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.list_widget.customContextMenuRequested.connect(self.show_context_menu)
         self.list_widget.setAlternatingRowColors(True)
+        self.list_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        
+        # Set style properties to improve readability
+        self.list_widget.setStyleSheet("""
+            QListWidget {
+                padding: 5px;
+                border-radius: 5px;
+                border: 1px solid #cccccc;
+            }
+            QListWidget::item {
+                border-bottom: 1px solid #eeeeee;
+                padding: 8px 5px;
+            }
+            QListWidget::item:selected {
+                background-color: #4285F4;
+                color: white;
+            }
+            QListWidget::item:hover {
+                background-color: #e8f0fe;
+            }
+        """)
+        
         layout.addWidget(self.list_widget)
         
         # Add Empty message when list is empty
@@ -58,39 +84,132 @@ class CardListWidget(QWidget):
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.empty_label.setStyleSheet("color: #888; font-style: italic; padding: 20px;")
         self.empty_label.setVisible(False)
+        self.empty_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         layout.addWidget(self.empty_label)
         
         # Only show toolbar if requested
         if self.show_toolbar:
-            # Create toolbar
-            toolbar_layout = QHBoxLayout()
-            toolbar_layout.setSpacing(8)
+            # Create toolbar - horizontal by default
+            self.toolbar_layout = QHBoxLayout()
+            self.toolbar_layout.setSpacing(8)
             
             # New button
             self.new_button = QPushButton("New Card")
             self.new_button.setIcon(QIcon.fromTheme("document-new"))
             self.new_button.clicked.connect(self.create_new_card)
             self.new_button.setEnabled(not self.read_only)
-            toolbar_layout.addWidget(self.new_button)
+            self.new_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+            self.toolbar_layout.addWidget(self.new_button)
             
             # Spacer
-            toolbar_layout.addStretch(1)
+            self.toolbar_layout.addStretch(1)
             
             # Edit button
             self.edit_button = QPushButton("Edit")
             self.edit_button.setIcon(QIcon.fromTheme("document-edit"))
             self.edit_button.clicked.connect(self.edit_selected_card)
             self.edit_button.setEnabled(False)
-            toolbar_layout.addWidget(self.edit_button)
+            self.edit_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+            self.toolbar_layout.addWidget(self.edit_button)
             
             # Delete button
             self.delete_button = QPushButton("Delete")
             self.delete_button.setIcon(QIcon.fromTheme("edit-delete"))
             self.delete_button.clicked.connect(self.delete_selected_card)
             self.delete_button.setEnabled(False)
-            toolbar_layout.addWidget(self.delete_button)
+            self.delete_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+            self.toolbar_layout.addWidget(self.delete_button)
             
-            layout.addLayout(toolbar_layout)
+            layout.addLayout(self.toolbar_layout)
+    
+    def handle_resize(self, width, height):
+        """Handle resize events to adapt layout."""
+        if width < 500 and not self.is_compact_mode:
+            self.switch_to_compact_mode()
+        elif width >= 500 and self.is_compact_mode:
+            self.switch_to_normal_mode()
+    
+    def switch_to_compact_mode(self):
+        """Switch to compact layout for smaller screens."""
+        self.is_compact_mode = True
+        
+        # If we have a toolbar, reorganize it for compact mode
+        if self.show_toolbar and hasattr(self, 'toolbar_layout'):
+            # Convert toolbar to vertical layout if it's currently horizontal
+            if isinstance(self.toolbar_layout, QHBoxLayout):
+                # Remove current toolbar layout
+                old_layout = self.toolbar_layout
+                
+                # Create new vertical layout
+                self.toolbar_layout = QVBoxLayout()
+                self.toolbar_layout.setSpacing(8)
+                
+                # Move buttons to new layout
+                while old_layout.count():
+                    item = old_layout.takeAt(0)
+                    if item.widget():
+                        self.toolbar_layout.addWidget(item.widget())
+                    elif item.spacerItem():
+                        # Skip spacers in compact mode
+                        pass
+                
+                # Apply compact styling
+                for i in range(self.toolbar_layout.count()):
+                    item = self.toolbar_layout.itemAt(i)
+                    if item.widget():
+                        item.widget().setMinimumWidth(150)
+                        item.widget().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+    
+    def switch_to_normal_mode(self):
+        """Switch to normal layout for larger screens."""
+        self.is_compact_mode = False
+        
+        # If we have a toolbar, restore normal layout
+        if self.show_toolbar and hasattr(self, 'toolbar_layout'):
+            # Convert toolbar to horizontal layout if it's vertical
+            if isinstance(self.toolbar_layout, QVBoxLayout):
+                # Remove current toolbar layout
+                old_layout = self.toolbar_layout
+                
+                # Create new horizontal layout
+                self.toolbar_layout = QHBoxLayout()
+                self.toolbar_layout.setSpacing(8)
+                
+                # Move buttons to new layout
+                has_new_button = False
+                has_edit_button = False
+                has_delete_button = False
+                
+                # First extract all widgets
+                widgets = []
+                while old_layout.count():
+                    item = old_layout.takeAt(0)
+                    if item.widget():
+                        widgets.append(item.widget())
+                
+                # Add new button first
+                for widget in widgets:
+                    if widget == self.new_button:
+                        self.toolbar_layout.addWidget(widget)
+                        has_new_button = True
+                        break
+                
+                # Add spacer in the middle
+                self.toolbar_layout.addStretch(1)
+                
+                # Add edit and delete buttons
+                for widget in widgets:
+                    if widget == self.edit_button:
+                        self.toolbar_layout.addWidget(widget)
+                        has_edit_button = True
+                    elif widget == self.delete_button:
+                        self.toolbar_layout.addWidget(widget)
+                        has_delete_button = True
+                
+                # Restore normal styling
+                for widget in widgets:
+                    widget.setMinimumWidth(80)
+                    widget.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
     
     def set_title(self, title):
         """Set the header title."""
@@ -164,6 +283,10 @@ class CardListWidget(QWidget):
         self.update_button_states()
         self.update_empty_state()
     
+    def get_card(self, card_id):
+        """Get a card by ID."""
+        return self.cards.get(card_id)
+    
     def get_selected_card_id(self):
         """Get the ID of the currently selected card."""
         items = self.list_widget.selectedItems()
@@ -177,6 +300,19 @@ class CardListWidget(QWidget):
         if card_id and card_id in self.cards:
             return self.cards[card_id]
         return None
+    
+    def highlight_card(self, card_id):
+        """Highlight a specific card in the list."""
+        # Clear current selection
+        self.list_widget.clearSelection()
+        
+        # Find and select the item
+        for i in range(self.list_widget.count()):
+            item = self.list_widget.item(i)
+            if item.data(Qt.ItemDataRole.UserRole) == card_id:
+                self.list_widget.setCurrentItem(item)
+                self.list_widget.scrollToItem(item)
+                break
     
     def on_item_clicked(self, item):
         """Handle item clicked event."""

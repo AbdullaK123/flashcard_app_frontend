@@ -1,10 +1,10 @@
 import sys
 from PyQt6.QtWidgets import (
     QMainWindow, QTabWidget, QVBoxLayout, QWidget,
-    QToolBar, QStatusBar, QMessageBox
+    QStatusBar, QMessageBox, QSplitter, QApplication
 )
 from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal, QSize, QRect
 from src.ui.views.home_view import HomeView             
 from src.ui.views.study_view import StudyView           
 from src.ui.views.history_view import HistoryView         
@@ -28,12 +28,20 @@ class MainWindow(QMainWindow):
         # Initialize theme manager
         self.theme_manager = ThemeManager(self.settings)
 
+        # Get screen information for responsive sizing
+        self.screen_geometry = QApplication.primaryScreen().geometry()
+        self.screen_width = self.screen_geometry.width()
+        self.screen_height = self.screen_geometry.height()
+        self.logger.info(f"Screen dimensions: {self.screen_width}x{self.screen_height}")
+
         # Setup UI components
-        # --- Previous fix for explicit parenting applied here ---
         self.setup_ui()
 
         # Apply current theme
         self.theme_manager.apply_theme()
+
+        # Set up responsive sizing
+        self.setup_responsive_layout()
 
         self.logger.info("MainWindow initialized")
 
@@ -42,18 +50,21 @@ class MainWindow(QMainWindow):
         """Set up the main window UI components."""
         # Set window properties
         self.setWindowTitle("Flashcard App")
-        self.setMinimumSize(900, 600)
-
-        # Create central widget
+        
+        # Create central widget with QSplitter for better responsiveness
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
 
         # Create main layout and explicitly parent it to the central widget
-        self.main_layout = QVBoxLayout(self.central_widget) # Pass parent here
+        self.main_layout = QVBoxLayout(self.central_widget)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setSpacing(0)  # Minimize spacing for maximizing content area
 
         # Create tab widget and explicitly parent it
-        self.tab_widget = QTabWidget(self.central_widget) # Pass parent here
+        self.tab_widget = QTabWidget(self.central_widget)
+        self.tab_widget.setDocumentMode(True)  # Cleaner tab appearance
+        self.tab_widget.setTabPosition(QTabWidget.TabPosition.North)
+        self.tab_widget.setMovable(True)  # Allow tab reordering
 
         # Create views (parents will likely be set when added to tab_widget)
         self.home_view = HomeView(self.settings, self.storage)
@@ -73,12 +84,90 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.status_bar)
         self.status_bar.showMessage("Ready")
 
-        # Setup menu and toolbar
+        # Setup menu bar
         self.setup_menu()
-        self.setup_toolbar()
 
         # Connect signals
         self.connect_signals()
+
+    def setup_responsive_layout(self):
+        """Configure responsive behavior based on screen size."""
+        # Set initial window size based on screen dimensions
+        width = min(int(self.screen_width * 0.85), 1400)  # Use 85% of screen width up to 1400px
+        height = min(int(self.screen_height * 0.85), 900)  # Use 85% of screen height up to 900px
+        
+        # Calculate position to center on screen
+        x = (self.screen_width - width) // 2
+        y = (self.screen_height - height) // 2
+        
+        # Set geometry
+        self.setGeometry(x, y, width, height)
+        
+        # Set minimum size to ensure usability on smaller screens
+        min_width = min(800, self.screen_width - 100)
+        min_height = min(600, self.screen_height - 100)
+        self.setMinimumSize(min_width, min_height)
+        
+        # Adjust font size based on screen DPI
+        base_font_size = 10
+        logical_dpi = QApplication.primaryScreen().logicalDotsPerInch()
+        if logical_dpi > 120:
+            base_font_size = 12
+        
+        # Apply full screen optimizations
+        # Retain menu bar in full screen mode
+        self.menuBar().setNativeMenuBar(False)
+        
+        # Log the responsive setup
+        self.logger.info(f"Responsive layout configured: window size {width}x{height}, "
+                         f"minimum size {min_width}x{min_height}")
+
+    def resizeEvent(self, event):
+        """Handle window resize events for responsive adjustments."""
+        # Call parent implementation
+        super().resizeEvent(event)
+        
+        # Adjust UI elements based on new window size
+        window_width = event.size().width()
+        window_height = event.size().height()
+        
+        # Example: Adjust tab widget height dynamically
+        content_height = window_height - self.menuBar().height() - self.statusBar().height()
+        self.tab_widget.setFixedHeight(content_height)
+        
+        # Let child views know about the resize
+        for i in range(self.tab_widget.count()):
+            view = self.tab_widget.widget(i)
+            if hasattr(view, 'handle_resize'):
+                view.handle_resize(window_width, content_height)
+
+    def showMaximized(self):
+        """Override to optimize UI for maximized state."""
+        # Do any pre-maximized adjustments
+        super().showMaximized()
+        
+        # Adjust UI for maximized state
+        self.logger.info("Window maximized - optimizing layout")
+        
+        # Notify views of maximized state
+        for i in range(self.tab_widget.count()):
+            view = self.tab_widget.widget(i)
+            if hasattr(view, 'handle_maximized'):
+                view.handle_maximized()
+
+    def showNormal(self):
+        """Override to revert UI optimizations when un-maximizing."""
+        # Do any pre-normal state adjustments
+        super().showNormal()
+        
+        # Adjust UI for normal state
+        self.logger.info("Window restored - reverting to normal layout")
+        
+        # Notify views of normal state
+        for i in range(self.tab_widget.count()):
+            view = self.tab_widget.widget(i)
+            if hasattr(view, 'handle_normal'):
+                view.handle_normal()
 
     @handle_errors(dialog_title="UI Error")
     def setup_menu(self):                                
@@ -101,6 +190,14 @@ class MainWindow(QMainWindow):
         file_menu.addAction(settings_action)
 
         file_menu.addSeparator()
+        
+        # Full screen toggle
+        toggle_fullscreen_action = QAction("Toggle Full Screen", self)
+        toggle_fullscreen_action.setShortcut("F11")
+        toggle_fullscreen_action.triggered.connect(self.toggle_fullscreen)
+        file_menu.addAction(toggle_fullscreen_action)
+        
+        file_menu.addSeparator()
 
         # Exit action
         exit_action = QAction("Exit", self)
@@ -110,6 +207,21 @@ class MainWindow(QMainWindow):
 
         # View menu
         view_menu = self.menuBar().addMenu("&View")
+
+        # Add navigation actions to View menu
+        create_cards_action = QAction("Create Cards", self)
+        create_cards_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(0))
+        view_menu.addAction(create_cards_action)
+
+        study_action = QAction("Study", self)
+        study_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(1))
+        view_menu.addAction(study_action)
+
+        history_action = QAction("History", self)
+        history_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(2))
+        view_menu.addAction(history_action)
+
+        view_menu.addSeparator()
 
         # Theme submenu
         theme_menu = view_menu.addMenu("Theme")
@@ -132,33 +244,13 @@ class MainWindow(QMainWindow):
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
 
-    @handle_errors(dialog_title="UI Error")
-    def setup_toolbar(self):                             
-        """Set up the main toolbar."""
-        self.toolbar = QToolBar("Main Toolbar")
-        self.toolbar.setMovable(False)
-        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolbar)
-
-        # Add toolbar actions
-        create_action = QAction("Create Cards", self)
-        create_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(0))
-        self.toolbar.addAction(create_action)
-
-        study_action = QAction("Study", self)
-        study_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(1))
-        self.toolbar.addAction(study_action)
-
-        history_action = QAction("History", self)
-        history_action.triggered.connect(lambda: self.tab_widget.setCurrentIndex(2))
-        self.toolbar.addAction(history_action)
-
-        self.toolbar.addSeparator()
-
-        # Settings action
-        settings_action = QAction("Settings", self)
-        settings_action.triggered.connect(self.show_settings) # Connects here
-        self.toolbar.addAction(settings_action)
-
+    def toggle_fullscreen(self):
+        """Toggle between fullscreen and normal window mode."""
+        if self.isFullScreen():
+            self.showNormal()
+        else:
+            self.showFullScreen()
+            
     def connect_signals(self):                           
         """Connect signals between components."""
         # Connect home view signals
@@ -260,8 +352,7 @@ class MainWindow(QMainWindow):
             self.logger.error(f"Unexpected error refreshing tab {tab_name}: {e}", exc_info=True)
             QMessageBox.critical(self, "Error", f"An unexpected error occurred loading the {tab_name} tab.")
 
-
-    def closeEvent(self, event):                         # [cite: 1]
+    def closeEvent(self, event):                         
         """Handle window close event."""
         # Ask for confirmation before closing
         reply = QMessageBox.question(
@@ -275,7 +366,6 @@ class MainWindow(QMainWindow):
         if reply == QMessageBox.StandardButton.Yes:
             self.logger.info("Application closing by user confirmation")
             # Perform any necessary cleanup before accepting exit
-            # e.g., self.settings.save() - though this might be handled by app core
             event.accept()
         else:
             self.logger.debug("User cancelled application exit")

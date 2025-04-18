@@ -1,10 +1,9 @@
-# src/ui/views/home_view.py
 import sys
 import asyncio
 from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, 
+    QVBoxLayout, QHBoxLayout, QLabel, QPushButton, 
     QLineEdit, QTextEdit, QSpinBox, QProgressBar, QMessageBox,
-    QFormLayout, QGroupBox, QSplitter
+    QFormLayout, QGroupBox, QSplitter, QSizePolicy, QWidget
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QThreadPool, QRunnable, pyqtSlot, QObject
 
@@ -13,6 +12,7 @@ from src.data.models import Flashcard, FlashcardDeck
 from src.ui.widgets.card_list_widget import CardListWidget
 from src.utils.logger import get_logger
 from src.utils.error_handling import handle_errors
+from src.ui.views.responsive_view import ResponsiveView
 
 # Worker signals for background processing
 class WorkerSignals(QObject):
@@ -53,17 +53,14 @@ class GenerateFlashcardsWorker(QRunnable):
         except Exception as e:
             self.signals.error.emit(str(e))
 
-class HomeView(QWidget):
+class HomeView(ResponsiveView):
     """Home view for creating new flashcards and viewing recent cards."""
     
     # Signal emitted when a new deck is created
     deck_created = pyqtSignal(str)  # Emits deck ID
     
-    def __init__(self, settings, storage):
-        super().__init__()
-        self.settings = settings
-        self.storage = storage
-        self.logger = get_logger(__name__)
+    def __init__(self, settings, storage, parent=None):
+        super().__init__(settings, storage, parent)
         
         # Create API client
         api_url = self.settings.get("api_url", "http://localhost:8000")
@@ -82,13 +79,14 @@ class HomeView(QWidget):
     
     @handle_errors(dialog_title="UI Error")
     def setup_ui(self):
-        """Set up the user interface."""
+        """Set up the user interface with responsive design."""
         # Main layout
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(20, 20, 20, 20)
         
         # Create a splitter to divide the view
-        splitter = QSplitter(Qt.Orientation.Vertical)
+        self.main_splitter = QSplitter(Qt.Orientation.Vertical)
+        self.main_splitter.setChildrenCollapsible(False)
         
         # --- Top section for card generation ---
         top_widget = QWidget()
@@ -99,6 +97,7 @@ class HomeView(QWidget):
         title_label = QLabel("Create New Flashcards")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
+        title_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         top_layout.addWidget(title_label)
         
         # Description
@@ -108,16 +107,20 @@ class HomeView(QWidget):
         )
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        desc_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         top_layout.addWidget(desc_label)
         
         # Form group
         form_group = QGroupBox("Flashcard Generator")
+        form_group.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         form_layout = QFormLayout()
+        form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.ExpandingFieldsGrow)
         form_group.setLayout(form_layout)
         
         # Topic input
         self.topic_input = QLineEdit()
         self.topic_input.setPlaceholderText("e.g., Python Programming, French Revolution, Quantum Physics")
+        self.topic_input.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         form_layout.addRow("Topic:", self.topic_input)
         
         # Number of cards
@@ -126,12 +129,14 @@ class HomeView(QWidget):
         self.num_cards_input.setMaximum(40)  # Limit to 40 cards
         self.num_cards_input.setValue(10)
         self.num_cards_input.setSingleStep(5)
+        self.num_cards_input.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         form_layout.addRow("Number of cards:", self.num_cards_input)
         
         # Additional notes
         self.notes_input = QTextEdit()
         self.notes_input.setPlaceholderText("Any specific areas to focus on? (optional)")
         self.notes_input.setMaximumHeight(100)
+        self.notes_input.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         form_layout.addRow("Additional notes:", self.notes_input)
         
         top_layout.addWidget(form_group)
@@ -140,28 +145,34 @@ class HomeView(QWidget):
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 0)  # Indeterminate
         self.progress_bar.setVisible(False)
+        self.progress_bar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         top_layout.addWidget(self.progress_bar)
         
         # Status label
         self.status_label = QLabel()
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_label.setVisible(False)
+        self.status_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         top_layout.addWidget(self.status_label)
         
         # Button area
         button_layout = QHBoxLayout()
+        button_layout.addStretch(1)
         
         # Clear button
         self.clear_button = QPushButton("Clear")
         self.clear_button.clicked.connect(self.clear_form)
+        self.clear_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         button_layout.addWidget(self.clear_button)
         
         # Generate button
         self.generate_button = QPushButton("Generate Flashcards")
         self.generate_button.clicked.connect(self.generate_flashcards)
         self.generate_button.setDefault(True)
+        self.generate_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         button_layout.addWidget(self.generate_button)
         
+        button_layout.addStretch(1)
         top_layout.addLayout(button_layout)
         
         # --- Bottom section for recent cards ---
@@ -172,6 +183,7 @@ class HomeView(QWidget):
         # Recent cards label
         recent_cards_label = QLabel("Recent Flashcards")
         recent_cards_label.setStyleSheet("font-size: 18px; font-weight: bold;")
+        recent_cards_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         bottom_layout.addWidget(recent_cards_label)
         
         # Card list widget
@@ -179,17 +191,54 @@ class HomeView(QWidget):
         self.card_list.card_selected.connect(self.preview_card)
         self.card_list.edit_requested.connect(self.edit_card)
         self.card_list.delete_requested.connect(self.delete_card)
+        self.card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         bottom_layout.addWidget(self.card_list)
         
         # Add widgets to splitter
-        splitter.addWidget(top_widget)
-        splitter.addWidget(bottom_widget)
+        self.main_splitter.addWidget(top_widget)
+        self.main_splitter.addWidget(bottom_widget)
         
         # Set initial sizes (60% top, 40% bottom)
-        splitter.setSizes([600, 400])
+        self.main_splitter.setSizes([600, 400])
         
         # Add splitter to main layout
-        main_layout.addWidget(splitter)
+        main_layout.addWidget(self.main_splitter)
+    
+    def handle_resize(self, width, height):
+        """Handle parent window resize to adjust layout dynamically."""
+        super().handle_resize(width, height)
+        
+        # Adjust splitter proportions based on window size
+        if width < 800:
+            # In narrow windows, give more space to the form
+            self.main_splitter.setSizes([int(height * 0.7), int(height * 0.3)])
+        else:
+            # In wider windows, balance the view more evenly
+            self.main_splitter.setSizes([int(height * 0.55), int(height * 0.45)])
+    
+    def switch_to_compact_mode(self):
+        """Switch to compact layout for smaller screens."""
+        super().switch_to_compact_mode()
+        
+        # Make form labels more compact
+        for i in range(self.main_splitter.count()):
+            widget = self.main_splitter.widget(i)
+            if isinstance(widget, QGroupBox):
+                layout = widget.layout()
+                if isinstance(layout, QFormLayout):
+                    layout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapAllRows)
+    
+    def switch_to_normal_mode(self):
+        """Switch to normal layout for larger screens."""
+        super().switch_to_normal_mode()
+        
+        # Restore form label alignment
+        for i in range(self.main_splitter.count()):
+            widget = self.main_splitter.widget(i)
+            if isinstance(widget, QGroupBox):
+                layout = widget.layout()
+                if isinstance(layout, QFormLayout):
+                    layout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
     
     def clear_form(self):
         """Clear all input fields."""
@@ -319,7 +368,9 @@ class HomeView(QWidget):
         # Get recent cards (up to 50 cards from newest decks)
         recent_cards = []
         for deck in sorted(decks, key=lambda d: d.created_at, reverse=True):
-            recent_cards.extend(deck.cards)
+            full_deck = self.storage.get_deck(deck.id)
+            if full_deck and full_deck.cards:
+                recent_cards.extend(full_deck.cards)
             if len(recent_cards) >= 50:
                 break
         
@@ -332,28 +383,42 @@ class HomeView(QWidget):
     
     def preview_card(self, card_id):
         """Preview a card when it's selected in the list."""
-        # This could show card details in a separate area
-        pass
+        card = self.card_list.get_card(card_id)
+        if card:
+            QMessageBox.information(
+                self,
+                "Card Preview",
+                f"Question:\n{card.question}\n\nAnswer:\n{card.answer}"
+            )
     
     @handle_errors(dialog_title="Edit Error")
     def edit_card(self, card_id):
         """Edit a flashcard."""
-        # Find the card in storage
+        # Find the card
+        card = self.card_list.get_card(card_id)
+        if not card:
+            self.logger.warning(f"Card {card_id} not found for editing")
+            return
+            
+        # Get the deck for this card
+        # We need to scan all decks to find which one contains this card
         for deck in self.storage.get_all_decks():
-            for card in deck.cards:
-                if card.id == card_id:
-                    # Show edit dialog (would need to create this dialog)
-                    from src.ui.dialogs.edit_card_dialog import EditCardDialog
-                    dialog = EditCardDialog(card, self)
-                    if dialog.exec():
-                        # Update card and save
-                        updated_card = dialog.get_updated_card()
-                        self.storage.save_card(updated_card, deck.id)
-                        self.card_list.update_card(updated_card)
-                        self.logger.info(f"Card {card_id} updated")
-                    return
+            full_deck = self.storage.get_deck(deck.id)
+            if full_deck:
+                for deck_card in full_deck.cards:
+                    if deck_card.id == card_id:
+                        # Show edit dialog
+                        from src.ui.dialogs.edit_card_dialog import EditCardDialog
+                        dialog = EditCardDialog(card, self)
+                        if dialog.exec():
+                            # Update card and save
+                            updated_card = dialog.get_updated_card()
+                            self.storage.save_card(updated_card, deck.id)
+                            self.card_list.update_card(updated_card)
+                            self.logger.info(f"Card {card_id} updated")
+                        return
         
-        self.logger.warning(f"Card {card_id} not found for editing")
+        self.logger.warning(f"Could not find deck for card {card_id}")
     
     @handle_errors(dialog_title="Delete Error")
     def delete_card(self, card_id):

@@ -13,7 +13,7 @@ class AboutDialog(QDialog):
         super().__init__(parent)
         
         self.setWindowTitle("About Flashcard App")
-        self.setFixedSize(400, 300)
+        self.setFixedSize(500, 500)
         self.setObjectName("aboutDialog")  # For CSS styling
         
         # Main layout

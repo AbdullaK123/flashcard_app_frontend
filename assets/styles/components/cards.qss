@@ -1,11 +1,12 @@
-/* Card styles for flashcard display */
+/* Card styles for flashcard display with improved spacing */
 
 QFrame.card {
     border: 1px solid ${var.border};
-    border-radius: 8px;
+    border-radius: 10px; /* Slightly more rounded corners */
     background-color: white;
-    padding: 15px;
-    min-height: 200px;
+    padding: 25px; /* Increased padding */
+    min-height: 250px; /* Taller minimum height */
+    margin: 15px; /* Added margin around cards */
 }
 
 QFrame.card-dark {
@@ -13,9 +14,11 @@ QFrame.card-dark {
 }
 
 QLabel.card-content {
-    font-size: 16pt;
+    font-size: 18pt; /* Larger font */
     font-weight: bold;
-    padding: 20px;
+    padding: 30px; /* Increased padding */
+    margin: 10px; /* Added margin */
+    line-height: 1.4; /* Added line height for better text spacing */
 }
 
 QLabel.card-question {
@@ -35,17 +38,40 @@ QLabel.card-answer {
     color: #5294FF;
 }
 
-/* Card navigation buttons */
+/* Card navigation buttons with improved spacing */
 QPushButton.card-nav-button {
-    min-width: 40px;
-    padding: 5px 10px;
+    min-width: 50px; /* Wider buttons */
+    min-height: 30px; /* Taller buttons */
+    padding: 8px 15px; /* Increased padding */
     font-weight: bold;
+    margin: 10px; /* Added margin between buttons */
 }
 
 QPushButton.correct-button {
     background-color: #34A853;
+    padding: 10px 20px; /* Even more padding for action buttons */
+    margin: 0 15px; /* Horizontal margin */
 }
 
 QPushButton.incorrect-button {
     background-color: #EA4335;
+    padding: 10px 20px; /* Even more padding for action buttons */
+    margin: 0 15px; /* Horizontal margin */
+}
+
+/* Card footer area */
+.card-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+}
+
+/* Card container spacing */
+QWidget > QFrame.card {
+    margin: 20px;
+}
+
+/* Add spacing for card controls */
+.card-controls {
+    margin-top: 20px;
+    padding: 10px;
 }

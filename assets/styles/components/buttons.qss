@@ -1,26 +1,43 @@
-/* Button styles */
+/* Button styles with improved spacing and visual hierarchy */
 
 /* Standard button */
 QPushButton {
-    min-width: 80px;
-    min-height: 25px;
+    min-width: 90px;
+    min-height: 32px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: ${var.primary};
+    color: white;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: ${var.accent};
+}
+
+QPushButton:pressed {
+    background-color: ${var.secondary};
 }
 
 /* Primary action button */
 QPushButton#primaryButton {
     background-color: ${var.primary};
-    padding: 10px 20px;
-    font-size: 11pt;
+    padding: 12px 24px;
+    font-size: 12pt;
+    min-height: 40px;
 }
 
 /* Secondary action button */
 QPushButton#secondaryButton {
     background-color: ${var.secondary};
+    color: white;
 }
 
 /* Success button */
 QPushButton#successButton {
     background-color: #34A853;
+    color: white;
 }
 
 /* Warning button */
@@ -32,13 +49,14 @@ QPushButton#warningButton {
 /* Danger button */
 QPushButton#dangerButton {
     background-color: #EA4335;
+    color: white;
 }
 
 /* Toolbar buttons */
 QToolButton {
     border: none;
-    padding: 6px;
-    border-radius: 3px;
+    padding: 8px;
+    border-radius: 4px;
 }
 
 QToolButton:hover {

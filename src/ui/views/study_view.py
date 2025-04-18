@@ -667,7 +667,7 @@ class StudyView(ResponsiveView):
 
 
     @handle_errors(dialog_title="Study Error")
-    def end_study_session(self):
+    def end_study_session(self, checked=None):
         """End the current study session."""
         if not self.current_session or not self.current_deck:
              self.logger.warning("Attempted to end session, but no active session or deck found.")

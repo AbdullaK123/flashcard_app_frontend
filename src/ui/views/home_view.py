@@ -84,12 +84,21 @@ class HomeView(ResponsiveView):
         main_layout = self.keep_reference(QVBoxLayout(self))
         main_layout.setContentsMargins(20, 20, 20, 20)
         
+        # Create a splitter to divide the view
+        self.main_splitter = QSplitter(Qt.Orientation.Vertical)
+        self.main_splitter.setChildrenCollapsible(False)
+        
+        # Create top widget container for form elements
+        top_widget = QWidget()
+        top_layout = self.keep_reference(QVBoxLayout(top_widget))
+        top_layout.setContentsMargins(0, 0, 0, 0)
+        
         # Title
         title_label = QLabel("Create New Flashcards")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
         title_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        main_layout.addWidget(title_label)
+        top_layout.addWidget(title_label)
         
         # Description
         desc_label = QLabel(
@@ -99,7 +108,7 @@ class HomeView(ResponsiveView):
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         desc_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        main_layout.addWidget(desc_label)
+        top_layout.addWidget(desc_label)
         
         # Form group
         form_group = QGroupBox("Flashcard Generator")
@@ -130,23 +139,23 @@ class HomeView(ResponsiveView):
         self.notes_input.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         form_layout.addRow("Additional notes:", self.notes_input)
         
-        main_layout.addWidget(form_group)
+        top_layout.addWidget(form_group)
         
         # Progress area
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 0)  # Indeterminate
         self.progress_bar.setVisible(False)
         self.progress_bar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        main_layout.addWidget(self.progress_bar)
+        top_layout.addWidget(self.progress_bar)
         
         # Status label
         self.status_label = QLabel()
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_label.setVisible(False)
         self.status_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        main_layout.addWidget(self.status_label)
+        top_layout.addWidget(self.status_label)
         
-        # Button area
+        # Button area - add directly to top_layout
         button_layout = self.keep_reference(QHBoxLayout())
         button_layout.addStretch(1)
         
@@ -164,7 +173,7 @@ class HomeView(ResponsiveView):
         button_layout.addWidget(self.generate_button)
         
         button_layout.addStretch(1)
-        main_layout.addLayout(button_layout)
+        top_layout.addLayout(button_layout)  # Add buttons to top_layout
         
         # --- Bottom section for recent cards ---
         bottom_widget = QWidget()
@@ -184,21 +193,6 @@ class HomeView(ResponsiveView):
         self.card_list.delete_requested.connect(self.delete_card)
         self.card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         bottom_layout.addWidget(self.card_list)
-        
-        # Create a splitter to divide the view
-        self.main_splitter = QSplitter(Qt.Orientation.Vertical)
-        self.main_splitter.setChildrenCollapsible(False)
-        
-        # Create top widget container
-        top_widget = QWidget()
-        top_layout = self.keep_reference(QVBoxLayout(top_widget))
-        top_layout.setContentsMargins(0, 0, 0, 0)
-        top_layout.addWidget(title_label)
-        top_layout.addWidget(desc_label)
-        top_layout.addWidget(form_group)
-        top_layout.addWidget(self.progress_bar)
-        top_layout.addWidget(self.status_label)
-        top_layout.addLayout(button_layout)
         
         # Add widgets to splitter
         self.main_splitter.addWidget(top_widget)

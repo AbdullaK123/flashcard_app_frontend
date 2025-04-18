@@ -1,215 +1,119 @@
-/* Main application styles */
+/* Global styles for the Flashcard App */
 
-/* Global styles */
+/* Base styles for common widgets */
 QWidget {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    font-size: 10pt;
+    font-family: sans-serif;
+    font-size: 14px;
+    color: ${var.foreground}; /* From variables */
+    background-color: ${var.background};
 }
 
-/* Main window */
 QMainWindow {
+    background-color: ${var.background};
+}
+
+QTabWidget::pane { /* The content area */
     border: none;
     background-color: ${var.background};
 }
 
-/* Status bar */
-QStatusBar {
-    padding: 8px;
-    font-size: 9pt;
-    background-color: ${var.background};
-    border-top: 1px solid ${var.border};
+QTabWidget::tab-bar {
+    alignment: center;
 }
 
-/* Group box styling with improved spacing */
+QTabBar::tab {
+    background-color: ${var.background};
+    color: ${var.foreground};
+    border: none;
+    padding: 8px 16px;
+    margin: 0px;
+}
+
+QTabBar::tab:selected {
+    background-color: ${var.primary};
+    color: white;
+}
+
 QGroupBox {
+    margin-top: 1em;
+    margin-bottom: 1em;
     border: 1px solid ${var.border};
-    border-radius: 8px;
-    margin-top: 3ex; /* Increased margin */
-    padding-top: 2.5ex; /* Increased padding */
-    font-weight: bold;
-    margin-bottom: 20px; /* Added more bottom margin */
-    background-color: rgba(255, 255, 255, 0.5); /* Slightly transparent white */
+    border-radius: 5px;
 }
 
 QGroupBox::title {
     subcontrol-origin: margin;
-    subcontrol-position: top center;
-    padding: 0 15px; /* Increased padding */
-    color: ${var.primary};
+    left: 10px;
+    padding: 0 3px;
+    color: ${var.foreground};
 }
 
-/* Tabs with improved spacing */
-QTabWidget::pane {
+QLabel {
+    color: ${var.foreground};
+}
+
+QLineEdit, QTextEdit, QSpinBox, QComboBox {
     border: 1px solid ${var.border};
-    border-top: 0px;
-    padding: 20px; /* Increased padding */
+    border-radius: 3px;
+    padding: 5px;
+    selection-background-color: ${var.primary};
+    background-color: ${var.background};
+    color: ${var.foreground};
 }
 
-QTabBar::tab {
-    padding: 12px 20px; /* Increased padding */
-    margin-right: 6px; /* Increased margin */
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+QProgressBar {
+    text-align: center;
+    border: 1px solid ${var.border};
+    border-radius: 3px;
+    background-color: #f0f0f0; /* Default background */
+    color: ${var.foreground};
 }
 
-QTabBar::tab:selected {
-    font-weight: bold;
-    border-bottom: 2px solid ${var.primary};
-}
-
-/* Splitter with improved visibility */
-QSplitter::handle {
-    background-color: ${var.border};
-    height: 3px; /* Thicker handle */
-    width: 3px; /* Thicker handle */
-}
-
-QSplitter::handle:horizontal {
-    width: 8px; /* Wider horizontal handle */
-}
-
-QSplitter::handle:vertical {
-    height: 8px; /* Taller vertical handle */
-}
-
-QSplitter::handle:hover {
+QProgressBar::chunk {
     background-color: ${var.primary};
+    border-radius: 2px;
 }
 
-/* Scrollbars with modern styling */
+QTableWidget {
+    background-color: ${var.background};
+    color: ${var.foreground};
+    border: 1px solid ${var.border};
+    gridline-color: ${var.border};
+}
+
+QHeaderView::section {
+    background-color: #f0f0f0;
+    color: ${var.foreground};
+    border: none;
+    border-bottom: 1px solid ${var.border};
+    padding: 4px;
+}
+
 QScrollBar:vertical {
     border: none;
-    width: 14px; /* Wider scrollbar */
-    margin: 0px;
-    border-radius: 7px;
+    background: white;
+    width: 10px;
+    margin: 0px 0px 0px 0px;
 }
 
-QScrollBar:horizontal {
+QScrollBar::handle:vertical {
+    background: grey;
+    min-height: 20px;
+}
+
+QScrollBar::add-line:vertical {
     border: none;
-    height: 14px; /* Taller scrollbar */
-    margin: 0px;
-    border-radius: 7px;
-}
-
-QScrollBar::handle {
-    border-radius: 7px;
-    min-height: 40px; /* Larger minimum size */
-}
-
-QScrollBar::add-line, QScrollBar::sub-line {
-    border: none;
-    height: 0px;
-    width: 0px;
-}
-
-QScrollBar::add-page, QScrollBar::sub-page {
     background: none;
 }
 
-/* Menus with improved spacing */
-QMenuBar {
-    padding: 6px; /* Increased padding */
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
 }
 
-QMenuBar::item {
-    padding: 10px 16px; /* Increased padding */
-    border-radius: 6px;
-    margin-right: 2px;
+/* Specific widget adjustments (if needed globally) */
+QTextEdit {
+    font-size: 14px;
 }
 
-QMenuBar::item:selected {
-    background-color: rgba(128, 128, 128, 0.2);
-}
-
-QMenu {
-    padding: 10px; /* Increased padding */
-    border-radius: 6px;
-}
-
-QMenu::item {
-    padding: 10px 35px 10px 30px; /* Increased padding */
-    border-radius: 4px;
-    margin: 3px 5px;
-}
-
-QMenu::separator {
-    height: 1px;
-    margin: 10px 20px; /* Increased margin */
-}
-
-/* Main elements focus with better highlighting */
-QLineEdit:focus, QTextEdit:focus, QComboBox:focus {
-    border: 2px solid ${var.primary};
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-/* Improve layout spacing overall */
-QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout {
-    spacing: 16px; /* Increased default spacing */
-    margin: 10px; /* Increased default margin */
-}
-
-/* Improve spacing for form elements */
-QFormLayout QLabel {
-    margin-bottom: 6px;
-    margin-right: 15px;
-    padding: 2px 0;
-}
-
-/* Add spacing between widgets */
-QWidget {
-    margin: 3px;
-}
-
-/* Improved input fields */
-QLineEdit, QTextEdit, QSpinBox, QComboBox {
-    padding: 12px; /* Increased padding */
-    border-radius: 6px;
-    border: 1px solid ${var.border};
-}
-
-/* Spacing for buttons */
-QPushButton {
-    margin: 6px;
-    min-height: 30px;
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-weight: bold;
-}
-
-QPushButton:hover {
-    background-color: ${var.accent};
-}
-
-/* List widget items spacing */
-QListWidget {
-    border-radius: 6px;
-    padding: 5px;
-}
-
-QListWidget::item {
-    padding: 8px 10px;
-    margin: 3px 0;
-    border-radius: 4px;
-}
-
-QListWidget::item:hover {
-    background-color: rgba(128, 128, 128, 0.15);
-}
-
-/* Table widget cell spacing */
-QTableWidget {
-    border-radius: 6px;
-}
-
-QTableWidget::item {
-    padding: 8px;
-}
-
-/* Flashcard styling */
-QFrame.card {
-    border-radius: 12px;
-    padding: 30px;
-    min-height: 300px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
+/* Add more global styles as needed */

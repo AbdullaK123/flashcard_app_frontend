@@ -94,9 +94,10 @@ class ThemeManager:
         cards_qss = self._load_stylesheet(os.path.join(self.styles_dir, "components", "cards.qss"))
         dialogs_qss = self._load_stylesheet(os.path.join(self.styles_dir, "components", "dialogs.qss"))
         forms_qss = self._load_stylesheet(os.path.join(self.styles_dir, "components", "forms.qss"))
+        study_view_qss = self._load_stylesheet(os.path.join(self.styles_dir, "components", "study_view.qss"))  # Add this line
         
         # Combine all stylesheets
-        combined_qss = main_qss + theme_qss + buttons_qss + cards_qss + dialogs_qss + forms_qss
+        combined_qss = main_qss + theme_qss + buttons_qss + cards_qss + dialogs_qss + forms_qss + study_view_qss  # Add study_view_qss
         
         # Replace variables
         if theme_name in self.variables:

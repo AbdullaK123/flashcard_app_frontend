@@ -1,159 +1,21 @@
-/* Light theme specific styles */
+/* Light theme overrides */
 
-/* Variables */
-/* These are replaced by ThemeManager */
-/* ${var.background} = #f5f5f5 */
-/* ${var.foreground} = #333333 */
-/* ${var.primary} = #4285F4 */
-/* ${var.secondary} = #34A853 */
-/* ${var.accent} = #FBBC05 */
-/* ${var.error} = #EA4335 */
-/* ${var.border} = #d0d0d0 */
-
-/* Basic elements */
 QWidget {
-    background-color: ${var.background};
-    color: ${var.foreground};
+    background-color: ${light.background};
+    color: ${light.foreground};
 }
 
-/* Windows */
-QMainWindow, QDialog {
-    background-color: ${var.background};
+/* Override specific elements for light theme */
+QProgressBar {
+    background-color: #ffffff; /* Lighter background */
 }
 
-/* Input controls */
-QLineEdit, QTextEdit, QSpinBox, QDateEdit, QComboBox, QPlainTextEdit {
-    background-color: white;
-    border: 1px solid ${var.border};
-    padding: 5px;
-    border-radius: 3px;
-    color: ${var.foreground};
-}
-
-/* Buttons */
-QPushButton {
-    background-color: ${var.primary};
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-QPushButton:hover {
-    background-color: #5294FF;
-}
-
-QPushButton:pressed {
-    background-color: #3060C0;
-}
-
-QPushButton:disabled {
-    background-color: #CCCCCC;
-    color: #888888;
-}
-
-/* Tab widget */
-QTabWidget::pane {
-    background-color: white;
-    border: 1px solid ${var.border};
-}
-
-QTabBar::tab {
-    background-color: #e8e8e8;
-    color: ${var.foreground};
-    border: 1px solid ${var.border};
-    border-bottom: none;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-QTabBar::tab:selected {
-    background-color: white;
-}
-
-/* Tables */
 QTableWidget {
-    background-color: white;
-    alternate-background-color: #f9f9f9;
-    border: 1px solid ${var.border};
+    background-color: #ffffff;
 }
 
 QHeaderView::section {
-    background-color: #e8e8e8;
-    padding: 5px;
-    border: 1px solid ${var.border};
-    font-weight: bold;
+    background-color: #f0f0f0;
 }
 
-QTableWidget::item:selected {
-    background-color: ${var.primary};
-    color: white;
-}
-
-/* Combo box */
-QComboBox {
-    border: 1px solid ${var.border};
-    border-radius: 3px;
-    padding: 5px;
-    background-color: white;
-}
-
-QComboBox::drop-down {
-    border-left: 1px solid ${var.border};
-    width: 20px;
-}
-
-/* Group box */
-QGroupBox {
-    background-color: white;
-}
-
-QGroupBox::title {
-    background-color: ${var.background};
-}
-
-/* Menu */
-QMenuBar {
-    background-color: white;
-    border-bottom: 1px solid ${var.border};
-}
-
-QMenuBar::item:selected {
-    background-color: #e8e8e8;
-}
-
-QMenu {
-    background-color: white;
-    border: 1px solid ${var.border};
-}
-
-QMenu::item:selected {
-    background-color: #e8e8e8;
-}
-
-QMenu::separator {
-    background-color: ${var.border};
-}
-
-/* Progress bar */
-QProgressBar {
-    border: 1px solid ${var.border};
-    border-radius: 3px;
-    background-color: white;
-    text-align: center;
-}
-
-QProgressBar::chunk {
-    background-color: ${var.primary};
-    width: 1px;
-}
-
-/* Scrollbars */
-QScrollBar::handle {
-    background-color: #c0c0c0;
-}
-
-QScrollBar::handle:hover {
-    background-color: #a0a0a0;
-}
+/* Add more light theme overrides */

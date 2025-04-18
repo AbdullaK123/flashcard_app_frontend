@@ -1,76 +1,74 @@
-/* Form styles with improved spacing and readability */
+/* Form layout styles */
 
 QFormLayout {
-    margin: 20px; /* Increased margin */
-    spacing: 16px; /* Added more explicit spacing */
+    /* Style the form layout itself */
+    /* You might want to add spacing between rows here */
+    rowSpacing: 10;
+    columnSpacing: 15;
 }
 
-/* Form labels - with improved spacing and transparent background */
 QFormLayout QLabel {
+    /* Style form labels */
     font-weight: bold;
-    min-width: 140px; /* Wider minimum width */
-    background-color: transparent; /* Make background transparent to inherit parent's */
-    margin-right: 15px; /* Add margin between label and field */
-    padding: 5px 0; /* Add vertical padding */
-    color: ${var.secondary};
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /* Align labels to the top and left */
+    qproperty-alignment: 'AlignTop | AlignLeft';
 }
 
-/* Form fields with improved spacing */
-QLineEdit, QTextEdit, QSpinBox, QComboBox {
-    padding: 12px; /* Increased padding */
-    min-width: 250px; /* Wider minimum width */
-    margin-bottom: 8px; /* Add margin below each field */
-    border-radius: 6px;
+QFormLayout QLineEdit,
+QFormLayout QTextEdit,
+QFormLayout QSpinBox,
+QFormLayout QComboBox {
+    /* Style form fields */
     border: 1px solid ${var.border};
+    border-radius: 3px;
+    padding: 5px;
+    selection-background-color: ${var.primary};
+    background-color: ${var.background};
+    color: ${var.foreground};
+    /* Add spacing around fields */
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
-/* Validation styles */
-QLineEdit[valid="false"] {
-    border: 2px solid ${var.error};
+QFormLayout QLineEdit {
+    min-height: 24px; /* Ensure consistent height */
 }
 
-QLabel.error {
-    color: ${var.error};
-    font-size: 9pt;
-    margin-top: 4px; /* Add margin above error messages */
-    margin-left: 140px; /* Align with field content */
+QFormLayout QTextEdit {
+    min-height: 80px;
 }
 
-/* Required field indicator */
-QLabel[required="true"]::after {
-    content: " *";
-    color: ${var.error};
+QFormLayout QSpinBox {
+    min-height: 24px;
+}
+
+QFormLayout QComboBox {
+    min-height: 24px;
+}
+
+QFormLayout QCheckBox {
+    /* Style checkboxes within forms */
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* Add styles for form groups (if used) */
+QGroupBox {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border: 1px solid ${var.border};
+    border-radius: 5px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 3px;
+    color: ${var.foreground};
     font-weight: bold;
 }
 
-/* Form group spacing */
-QGroupBox QFormLayout {
-    margin-top: 25px; /* Increased margin */
-    margin-bottom: 15px; /* Added bottom margin */
-}
-
-/* Ensure labels in forms match parent background */
-QGroupBox QLabel, 
-QFrame QLabel,
-QWidget QLabel {
-    background-color: transparent;
-}
-
-/* Add space between form rows */
-QFormLayout > QLabel, QFormLayout > QWidget {
-    margin-top: 10px;
-}
-
-/* Specific styling for different field types */
-QTextEdit {
-    min-height: 120px; /* Ensure text areas have good height */
-}
-
-QComboBox {
-    min-height: 30px;
-}
-
-/* Add spacing between form sections */
-QWidget > QFormLayout {
-    margin-bottom: 25px;
-}
+/* Add more form-related styles */

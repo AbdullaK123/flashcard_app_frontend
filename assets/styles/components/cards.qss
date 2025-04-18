@@ -56,29 +56,32 @@ QPushButton.correct-button {
     margin: 0 20px; /* Horizontal margin */
     color: white;
 }
+/* Card list widget styles */
 
-QPushButton.incorrect-button {
-    background-color: #EA4335;
-    padding: 12px 25px; /* Even more padding for action buttons */
-    margin: 0 20px; /* Horizontal margin */
+QListWidget {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid ${var.border};
+}
+
+QListWidget::item {
+    border-bottom: 1px solid #eeeeee;
+    padding: 8px 5px;
+}
+
+QListWidget::item:selected {
+    background-color: ${var.primary};
     color: white;
 }
 
-/* Card footer area */
-.card-footer {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid ${var.border};
+QListWidget::item:hover {
+    background-color: #e8f0fe;
 }
 
-/* Card container spacing */
-QWidget > QFrame.card {
-    margin: 25px;
-}
+/* Flashcard widget styles */
 
-/* Add spacing for card controls */
-.card-controls {
-    margin-top: 25px;
-    padding: 15px;
-    spacing: 15px;
+QFrame#flashcardFrame {
+    border: 2px solid ${var.border};
+    border-radius: 10px;
+    background-color: white; /* Default card background */
 }

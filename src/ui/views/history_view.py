@@ -59,7 +59,7 @@ class HistoryView(ResponsiveView):
         
         self.end_date = QDateEdit()
         self.end_date.setCalendarPopup(True)
-        self.end_date.setDate(QDate.currentDate())
+        self.end_date.setDate(QDate.currentDate().addDays(1))
         self.end_date.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         
         filter_layout.addWidget(date_label)

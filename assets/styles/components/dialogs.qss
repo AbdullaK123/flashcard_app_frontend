@@ -1,49 +1,71 @@
 /* Dialog styles */
 
 QDialog {
-    border-radius: 5px;
-    min-width: 300px;
-    padding: 10px;
+    background-color: ${var.background};
+    color: ${var.foreground};
+    border: none;
+    border-radius: 8px;
 }
 
-QDialog QLabel#title {
-    font-size: 16pt;
-    font-weight: bold;
-    color: ${var.primary};
+/* Specific dialogs */
+
+QDialog#settingsDialog {
+    /* Add specific settings dialog styling */
 }
 
-QDialog QLabel#subtitle {
-    font-size: 11pt;
-    color: ${var.secondary};
+QDialog#aboutDialog {
+    /* Add specific about dialog styling */
 }
 
-/* Dialog buttons */
-QDialogButtonBox {
-    padding: 10px 0px;
+QDialog#newCardDialog, QDialog#editCardDialog {
+    /* Add specific card dialog styling */
 }
 
-QDialogButtonBox QPushButton {
-    min-width: 80px;
+/* Common elements within dialogs */
+
+QDialog QLabel {
+    /* Style labels within dialogs */
+    color: ${var.foreground};
 }
 
-/* Settings dialog */
-QDialog#settingsDialog QGroupBox {
+QDialog QPushButton {
+    /* Style buttons within dialogs */
+    background-color: #f0f0f0;
+    color: ${var.foreground};
+    border: 1px solid ${var.border};
+    border-radius: 3px;
+    padding: 8px 16px;
+    margin: 2px;
+}
+
+QDialog QPushButton:hover {
+    background-color: #e1e1e1;
+}
+
+QDialog QPushButton:pressed {
+    background-color: #d0d0d0;
+}
+
+QDialog QDialogButtonBox {
+    /* Style the button box */
+    /* You might want to adjust alignment or spacing here */
+    alignment: Qt.AlignmentFlag.AlignHCenter;
     margin-top: 20px;
     margin-bottom: 10px;
 }
 
-/* About dialog */
-QDialog#aboutDialog QLabel {
+QDialog QGroupBox {
+    /* Style group boxes within dialogs */
+    border: 1px solid ${var.border};
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+QDialog QGroupBox::title {
+    font-weight: bold;
+    color: ${var.foreground};
     padding: 5px;
 }
 
-QDialog#aboutDialog QLabel#appName {
-    font-size: 18pt;
-    font-weight: bold;
-    color: ${var.primary};
-}
-
-QDialog#aboutDialog QLabel#appVersion {
-    font-size: 10pt;
-    color: gray;
-}
+/* Add more dialog-specific styles */

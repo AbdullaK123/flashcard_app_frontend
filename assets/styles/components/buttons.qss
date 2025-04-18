@@ -1,68 +1,54 @@
-/* Button styles with improved spacing and visual hierarchy */
+/* Button styles */
 
-/* Standard button */
 QPushButton {
-    min-width: 90px;
-    min-height: 32px;
+    background-color: #f0f0f0;
+    color: ${var.foreground};
+    border: 1px solid ${var.border};
+    border-radius: 3px;
     padding: 8px 16px;
-    border-radius: 6px;
-    border: none;
-    background-color: ${var.primary};
-    color: white;
-    font-weight: bold;
+    margin: 2px;
 }
 
 QPushButton:hover {
-    background-color: ${var.accent};
+    background-color: #e1e1e1;
 }
 
 QPushButton:pressed {
-    background-color: ${var.secondary};
+    background-color: #d0d0d0;
 }
 
-/* Primary action button */
-QPushButton#primaryButton {
+QPushButton:disabled {
+    background-color: #cccccc;
+    color: #888888;
+    border-color: #bbbbbb;
+}
+
+/* Primary button (e.g., action buttons) */
+QPushButton.primary {
     background-color: ${var.primary};
-    padding: 12px 24px;
-    font-size: 12pt;
-    min-height: 40px;
-}
-
-/* Secondary action button */
-QPushButton#secondaryButton {
-    background-color: ${var.secondary};
     color: white;
 }
 
-/* Success button */
-QPushButton#successButton {
-    background-color: #34A853;
+QPushButton.primary:hover {
+    background-color: #4d90fe;
+}
+
+QPushButton.primary:pressed {
+    background-color: #307ffe;
+}
+
+/* Danger button (e.g., delete) */
+QPushButton.danger {
+    background-color: ${var.error};
     color: white;
 }
 
-/* Warning button */
-QPushButton#warningButton {
-    background-color: #FBBC05;
-    color: #333333;
+QPushButton.danger:hover {
+    background-color: #ea5447;
 }
 
-/* Danger button */
-QPushButton#dangerButton {
-    background-color: #EA4335;
-    color: white;
+QPushButton.danger:pressed {
+    background-color: #d13f32;
 }
 
-/* Toolbar buttons */
-QToolButton {
-    border: none;
-    padding: 8px;
-    border-radius: 4px;
-}
-
-QToolButton:hover {
-    background-color: rgba(128, 128, 128, 0.2);
-}
-
-QToolButton:pressed {
-    background-color: rgba(128, 128, 128, 0.3);
-}
+/* Add more button variations as needed */

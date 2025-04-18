@@ -204,7 +204,7 @@ class HomeView(QWidget):
         self.topic_input.setFocus()
     
     @handle_errors(dialog_title="Generation Error")
-    def generate_flashcards(self):
+    def generate_flashcards(self, checked=None):
         """Generate flashcards using the API."""
         # Get input values
         topic = self.topic_input.text().strip()

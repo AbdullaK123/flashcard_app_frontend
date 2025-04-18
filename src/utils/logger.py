@@ -13,13 +13,13 @@ def setup_logger():
     """Set up and configure the application logger."""
     # Create logger
     logger = logging.getLogger("flashcards")
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     
     # Only add handlers if they haven't been added already
     if not logger.handlers:
         # Create console handler for INFO+ messages
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.INFO)
+        console_handler.setLevel(logging.DEBUG)
         console_format = logging.Formatter('%(levelname)s: %(message)s')
         console_handler.setFormatter(console_format)
         

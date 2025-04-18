@@ -10,11 +10,11 @@ from src.utils.error_handling import handle_errors
 class APIClient:
     """Client for communicating with the backend flashcard API."""
     
-    def __init__(self, base_url: str = "http://localhost:8000"):
+    def __init__(self, base_url: str = "http://localhost:8000", timeout = 60.0):
         self.base_url = base_url
         self.logger = get_logger(__name__)
         # Longer timeout since generation can take time
-        self.timeout = 60.0
+        self.timeout = timeout
     
     @handle_errors(show_dialog=False, log_exception=True)
     async def generate_flashcards(self, topic: str, num_questions: int = 10) -> Optional[FlashCardResponse]:

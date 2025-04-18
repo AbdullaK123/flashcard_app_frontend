@@ -49,7 +49,7 @@ class CardListWidget(QWidget):
         self.list_widget.itemClicked.connect(self.on_item_clicked)
         self.list_widget.itemDoubleClicked.connect(self.on_item_double_clicked)
         self.list_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self.list_widget.customMenuRequested.connect(self.show_context_menu)
+        self.list_widget.customContextMenuRequested.connect(self.show_context_menu)
         self.list_widget.setAlternatingRowColors(True)
         layout.addWidget(self.list_widget)
         
@@ -195,7 +195,7 @@ class CardListWidget(QWidget):
     
     def update_button_states(self):
         """Update button enabled states based on selection."""
-        if not self.show_toolbar:
+        if not self.show_toolbar or not hasattr(self, 'edit_button'):
             return
             
         has_selection = self.get_selected_card_id() is not None

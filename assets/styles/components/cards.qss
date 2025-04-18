@@ -1,0 +1,51 @@
+/* Card styles for flashcard display */
+
+QFrame.card {
+    border: 1px solid ${var.border};
+    border-radius: 8px;
+    background-color: white;
+    padding: 15px;
+    min-height: 200px;
+}
+
+QFrame.card-dark {
+    background-color: #3a3a3a;
+}
+
+QLabel.card-content {
+    font-size: 16pt;
+    font-weight: bold;
+    padding: 20px;
+}
+
+QLabel.card-question {
+    color: #333333;
+}
+
+QLabel.card-answer {
+    color: #4285F4;
+}
+
+/* For dark mode */
+.card-dark QLabel.card-question {
+    color: #e0e0e0;
+}
+
+.card-dark QLabel.card-answer {
+    color: #5294FF;
+}
+
+/* Card navigation buttons */
+QPushButton.card-nav-button {
+    min-width: 40px;
+    padding: 5px 10px;
+    font-weight: bold;
+}
+
+QPushButton.correct-button {
+    background-color: #34A853;
+}
+
+QPushButton.incorrect-button {
+    background-color: #EA4335;
+}

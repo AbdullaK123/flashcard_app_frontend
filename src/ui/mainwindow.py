@@ -13,6 +13,7 @@ from src.ui.dialogs.about_dialog import AboutDialog
 from src.ui.theme import ThemeManager
 from src.utils.logger import get_logger
 from src.utils.error_handling import handle_errors
+from src.api.client import APIClient
 
 class MainWindow(QMainWindow):
     """Main application window with tabs, menus, and central widget."""
@@ -170,6 +171,33 @@ class MainWindow(QMainWindow):
         
         # Connect tab changed signal
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
+
+    def settings_changed(self):
+        """Handle settings being changed."""
+        self.logger.info("Applying updated settings")
+        
+        # Apply theme
+        self.theme_manager.apply_theme()
+        
+        # Update API client with new URL
+        api_url = self.settings.get("api_url", "http://localhost:8000")
+        api_timeout = self.settings.get("api_timeout", 60)
+        
+        # Create new API client with updated settings
+        self.api_client = APIClient(base_url=api_url, timeout=api_timeout)
+        
+        # Notify views of settings changes
+        if hasattr(self, 'home_view'):
+            self.home_view.update_settings()
+        
+        if hasattr(self, 'study_view'):
+            self.study_view.update_settings()
+        
+        if hasattr(self, 'history_view'):
+            self.history_view.update_settings()
+        
+        # Update status bar
+        self.status_bar.showMessage("Settings updated", 3000)
     
     @handle_errors(dialog_title="Theme Error")
     def change_theme(self, theme_name):

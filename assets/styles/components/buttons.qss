@@ -1,0 +1,50 @@
+/* Button styles */
+
+/* Standard button */
+QPushButton {
+    min-width: 80px;
+    min-height: 25px;
+}
+
+/* Primary action button */
+QPushButton#primaryButton {
+    background-color: ${var.primary};
+    padding: 10px 20px;
+    font-size: 11pt;
+}
+
+/* Secondary action button */
+QPushButton#secondaryButton {
+    background-color: ${var.secondary};
+}
+
+/* Success button */
+QPushButton#successButton {
+    background-color: #34A853;
+}
+
+/* Warning button */
+QPushButton#warningButton {
+    background-color: #FBBC05;
+    color: #333333;
+}
+
+/* Danger button */
+QPushButton#dangerButton {
+    background-color: #EA4335;
+}
+
+/* Toolbar buttons */
+QToolButton {
+    border: none;
+    padding: 6px;
+    border-radius: 3px;
+}
+
+QToolButton:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+QToolButton:pressed {
+    background-color: rgba(128, 128, 128, 0.3);
+}

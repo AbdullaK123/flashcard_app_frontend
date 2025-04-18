@@ -1,0 +1,20 @@
+{
+    "light": {
+        "background": "#f5f5f5",
+        "foreground": "#333333",
+        "primary": "#4285F4",
+        "secondary": "#34A853",
+        "accent": "#FBBC05",
+        "error": "#EA4335",
+        "border": "#d0d0d0"
+    },
+    "dark": {
+        "background": "#2d2d2d",
+        "foreground": "#e0e0e0",
+        "primary": "#4285F4",
+        "secondary": "#34A853",
+        "accent": "#FBBC05",
+        "error": "#EA4335", 
+        "border": "#555555"
+    }
+}

@@ -1,0 +1,49 @@
+/* Dialog styles */
+
+QDialog {
+    border-radius: 5px;
+    min-width: 300px;
+    padding: 10px;
+}
+
+QDialog QLabel#title {
+    font-size: 16pt;
+    font-weight: bold;
+    color: ${var.primary};
+}
+
+QDialog QLabel#subtitle {
+    font-size: 11pt;
+    color: ${var.secondary};
+}
+
+/* Dialog buttons */
+QDialogButtonBox {
+    padding: 10px 0px;
+}
+
+QDialogButtonBox QPushButton {
+    min-width: 80px;
+}
+
+/* Settings dialog */
+QDialog#settingsDialog QGroupBox {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* About dialog */
+QDialog#aboutDialog QLabel {
+    padding: 5px;
+}
+
+QDialog#aboutDialog QLabel#appName {
+    font-size: 18pt;
+    font-weight: bold;
+    color: ${var.primary};
+}
+
+QDialog#aboutDialog QLabel#appVersion {
+    font-size: 10pt;
+    color: gray;
+}

@@ -1,0 +1,38 @@
+/* Form styles */
+
+QFormLayout {
+    margin: 10px;
+}
+
+/* Form labels */
+QFormLayout QLabel {
+    font-weight: bold;
+    min-width: 100px;
+}
+
+/* Form fields */
+QLineEdit, QTextEdit, QSpinBox, QComboBox {
+    padding: 8px;
+    min-width: 200px;
+}
+
+/* Validation styles */
+QLineEdit[valid="false"] {
+    border: 1px solid ${var.error};
+}
+
+QLabel.error {
+    color: ${var.error};
+    font-size: 9pt;
+}
+
+/* Required field indicator */
+QLabel[required="true"]::after {
+    content: " *";
+    color: ${var.error};
+}
+
+/* Form group spacing */
+QGroupBox QFormLayout {
+    margin-top: 15px;
+}

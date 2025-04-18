@@ -1,0 +1,121 @@
+/* Main application styles */
+
+/* Global styles */
+QWidget {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 10pt;
+}
+
+/* Main window */
+QMainWindow {
+    border: none;
+}
+
+/* Status bar */
+QStatusBar {
+    padding: 3px;
+    font-size: 9pt;
+}
+
+/* Group box styling */
+QGroupBox {
+    border: 1px solid ${var.border};
+    border-radius: 5px;
+    margin-top: 1.5ex;
+    padding-top: 1.5ex;
+    font-weight: bold;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 0 5px;
+}
+
+/* Tabs */
+QTabWidget::pane {
+    border: 1px solid ${var.border};
+    border-top: 0px;
+    padding: 5px;
+}
+
+QTabBar::tab {
+    padding: 8px 12px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:selected {
+    font-weight: bold;
+}
+
+/* Splitter */
+QSplitter::handle {
+    background-color: ${var.border};
+    height: 1px;
+    width: 1px;
+}
+
+QSplitter::handle:horizontal {
+    width: 4px;
+}
+
+QSplitter::handle:vertical {
+    height: 4px;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    border: none;
+    width: 10px;
+    margin: 0px;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    height: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle {
+    border-radius: 5px;
+    min-height: 20px;
+}
+
+QScrollBar::add-line, QScrollBar::sub-line {
+    border: none;
+    height: 0px;
+    width: 0px;
+}
+
+QScrollBar::add-page, QScrollBar::sub-page {
+    background: none;
+}
+
+/* Menus */
+QMenuBar {
+    padding: 2px;
+}
+
+QMenuBar::item {
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+QMenu {
+    padding: 5px;
+}
+
+QMenu::item {
+    padding: 6px 25px 6px 20px;
+    border-radius: 3px;
+}
+
+QMenu::separator {
+    height: 1px;
+    margin: 5px 10px;
+}
+
+/* Main elements focus */
+QLineEdit:focus, QTextEdit:focus, QComboBox:focus {
+    border: 2px solid ${var.accent};
+}

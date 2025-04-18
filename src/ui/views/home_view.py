@@ -81,24 +81,15 @@ class HomeView(ResponsiveView):
     def setup_ui(self):
         """Set up the user interface with responsive design."""
         # Main layout
-        main_layout = QVBoxLayout(self)
+        main_layout = self.keep_reference(QVBoxLayout(self))
         main_layout.setContentsMargins(20, 20, 20, 20)
-        
-        # Create a splitter to divide the view
-        self.main_splitter = QSplitter(Qt.Orientation.Vertical)
-        self.main_splitter.setChildrenCollapsible(False)
-        
-        # --- Top section for card generation ---
-        top_widget = QWidget()
-        top_layout = QVBoxLayout(top_widget)
-        top_layout.setContentsMargins(0, 0, 0, 0)
         
         # Title
         title_label = QLabel("Create New Flashcards")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
         title_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        top_layout.addWidget(title_label)
+        main_layout.addWidget(title_label)
         
         # Description
         desc_label = QLabel(
@@ -108,12 +99,12 @@ class HomeView(ResponsiveView):
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         desc_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        top_layout.addWidget(desc_label)
+        main_layout.addWidget(desc_label)
         
         # Form group
         form_group = QGroupBox("Flashcard Generator")
         form_group.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        form_layout = QFormLayout()
+        form_layout = self.keep_reference(QFormLayout())
         form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.ExpandingFieldsGrow)
         form_group.setLayout(form_layout)
         
@@ -139,24 +130,24 @@ class HomeView(ResponsiveView):
         self.notes_input.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         form_layout.addRow("Additional notes:", self.notes_input)
         
-        top_layout.addWidget(form_group)
+        main_layout.addWidget(form_group)
         
         # Progress area
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 0)  # Indeterminate
         self.progress_bar.setVisible(False)
         self.progress_bar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        top_layout.addWidget(self.progress_bar)
+        main_layout.addWidget(self.progress_bar)
         
         # Status label
         self.status_label = QLabel()
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_label.setVisible(False)
         self.status_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        top_layout.addWidget(self.status_label)
+        main_layout.addWidget(self.status_label)
         
         # Button area
-        button_layout = QHBoxLayout()
+        button_layout = self.keep_reference(QHBoxLayout())
         button_layout.addStretch(1)
         
         # Clear button
@@ -173,11 +164,11 @@ class HomeView(ResponsiveView):
         button_layout.addWidget(self.generate_button)
         
         button_layout.addStretch(1)
-        top_layout.addLayout(button_layout)
+        main_layout.addLayout(button_layout)
         
         # --- Bottom section for recent cards ---
         bottom_widget = QWidget()
-        bottom_layout = QVBoxLayout(bottom_widget)
+        bottom_layout = self.keep_reference(QVBoxLayout(bottom_widget))
         bottom_layout.setContentsMargins(0, 0, 0, 0)
         
         # Recent cards label
@@ -193,6 +184,21 @@ class HomeView(ResponsiveView):
         self.card_list.delete_requested.connect(self.delete_card)
         self.card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         bottom_layout.addWidget(self.card_list)
+        
+        # Create a splitter to divide the view
+        self.main_splitter = QSplitter(Qt.Orientation.Vertical)
+        self.main_splitter.setChildrenCollapsible(False)
+        
+        # Create top widget container
+        top_widget = QWidget()
+        top_layout = self.keep_reference(QVBoxLayout(top_widget))
+        top_layout.setContentsMargins(0, 0, 0, 0)
+        top_layout.addWidget(title_label)
+        top_layout.addWidget(desc_label)
+        top_layout.addWidget(form_group)
+        top_layout.addWidget(self.progress_bar)
+        top_layout.addWidget(self.status_label)
+        top_layout.addLayout(button_layout)
         
         # Add widgets to splitter
         self.main_splitter.addWidget(top_widget)

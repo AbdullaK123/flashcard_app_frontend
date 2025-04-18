@@ -23,6 +23,9 @@ class ResponsiveView(QWidget):
         
         # Set size policy for the view
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        
+        # Store references to all layouts to prevent garbage collection
+        self._layout_references = []
     
     def handle_resize(self, width, height):
         """
@@ -76,3 +79,13 @@ class ResponsiveView(QWidget):
         Override this method in subclasses to implement settings update behavior.
         """
         pass
+        
+    def keep_reference(self, obj):
+        """
+        Stores a reference to a layout or widget to prevent garbage collection.
+        
+        Args:
+            obj: The layout or widget to keep a reference to
+        """
+        self._layout_references.append(obj)
+        return obj

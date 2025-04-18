@@ -26,7 +26,7 @@ class HistoryView(ResponsiveView):
     def setup_ui(self):
         """Set up the user interface with responsive design."""
         # Main layout
-        main_layout = QVBoxLayout(self)
+        main_layout = self.keep_reference(QVBoxLayout(self))
         main_layout.setContentsMargins(20, 20, 20, 20)
         
         # Title
@@ -37,7 +37,7 @@ class HistoryView(ResponsiveView):
         main_layout.addWidget(title_label)
         
         # Filter controls in a horizontal layout
-        filter_layout = QHBoxLayout()
+        filter_layout = self.keep_reference(QHBoxLayout())
         
         # Deck selector
         deck_label = QLabel("Deck:")
@@ -86,7 +86,7 @@ class HistoryView(ResponsiveView):
         # Statistics section
         stats_frame = QFrame()
         stats_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        stats_layout = QVBoxLayout(stats_frame)
+        stats_layout = self.keep_reference(QVBoxLayout(stats_frame))
         
         stats_title = QLabel("Study Statistics")
         stats_title.setStyleSheet("font-size: 18px; font-weight: bold;")
@@ -112,7 +112,7 @@ class HistoryView(ResponsiveView):
         # Sessions section
         sessions_frame = QFrame()
         sessions_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sessions_layout = QVBoxLayout(sessions_frame)
+        sessions_layout = self.keep_reference(QVBoxLayout(sessions_frame))
         
         sessions_title = QLabel("Recent Study Sessions")
         sessions_title.setStyleSheet("font-size: 18px; font-weight: bold;")
@@ -134,7 +134,7 @@ class HistoryView(ResponsiveView):
         # Cards section for the selected session
         cards_frame = QFrame()
         cards_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        cards_layout = QVBoxLayout(cards_frame)
+        cards_layout = self.keep_reference(QVBoxLayout(cards_frame))
         
         cards_title = QLabel("Session Cards")
         cards_title.setStyleSheet("font-size: 18px; font-weight: bold;")

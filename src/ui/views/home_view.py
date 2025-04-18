@@ -5,7 +5,6 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QThreadPool, QRunnable, pyqtSlot, QObject
 from PyQt6.QtGui import QIcon
-
 from src.api.client import APIClient
 from src.data.models import Flashcard, FlashcardDeck
 from src.ui.widgets.card_list_widget import CardListWidget
@@ -15,6 +14,8 @@ from src.ui.views.responsive_view import ResponsiveView
 from src.ui.dialogs.new_card_with_topic_dialog import NewCardWithTopicDialog
 from src.ui.dialogs.edit_card_dialog import EditCardDialog  # Import EditCardDialog
 from typing import List, Tuple  # Import List and Tuple
+import sys
+import asyncio
 
 
 # Worker signals for background processing

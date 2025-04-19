@@ -1,6 +1,7 @@
 # src/ui/theme.py
 import os
 import json
+import re
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QFile, QTextStream, QIODevice
 from src.utils.logger import get_logger
@@ -94,22 +95,77 @@ class ThemeManager:
         cards_qss = self._load_stylesheet(os.path.join(self.styles_dir, "components", "cards.qss"))
         dialogs_qss = self._load_stylesheet(os.path.join(self.styles_dir, "components", "dialogs.qss"))
         forms_qss = self._load_stylesheet(os.path.join(self.styles_dir, "components", "forms.qss"))
-        study_view_qss = self._load_stylesheet(os.path.join(self.styles_dir, "components", "study_view.qss"))  # Add this line
+        study_view_qss = self._load_stylesheet(os.path.join(self.styles_dir, "components", "study_view.qss"))
         
         # Combine all stylesheets
-        combined_qss = main_qss + theme_qss + buttons_qss + cards_qss + dialogs_qss + forms_qss + study_view_qss  # Add study_view_qss
+        combined_qss = main_qss + theme_qss + buttons_qss + cards_qss + dialogs_qss + forms_qss + study_view_qss
         
-        # Replace variables
+        # Create variable substitution map
+        var_map = {}
+        # Add current theme variables both as theme-specific and generic var references
         if theme_name in self.variables:
-            theme_vars = self.variables[theme_name]
-            for var_name, var_value in theme_vars.items():
-                combined_qss = combined_qss.replace(f"${{var.{var_name}}}", var_value)
+            for var_name, var_value in self.variables[theme_name].items():
+                var_map[f"${{{theme_name}.{var_name}}}"] = var_value
+                var_map[f"${{var.{var_name}}}"] = var_value
+        
+        # Add other theme variables as well to make sure all are replaced
+        other_theme = "dark" if theme_name == "light" else "light"
+        if other_theme in self.variables:
+            for var_name, var_value in self.variables[other_theme].items():
+                var_map[f"${{{other_theme}.{var_name}}}"] = var_value
+        
+        # Replace all variables in the stylesheet
+        for var_pattern, value in var_map.items():
+            combined_qss = combined_qss.replace(var_pattern, value)
+        
+        # Find any remaining unreplaced variables using regex
+        remaining_vars = re.findall(r'\${[^}]+}', combined_qss)
+        if remaining_vars:
+            self.logger.warning(f"Found unreplaced variables in stylesheet: {remaining_vars}")
+            # Replace any remaining variable references with safe defaults to prevent parse errors
+            for var in remaining_vars:
+                self.logger.warning(f"Replacing unreplaced variable {var} with fallback")
+                if "background" in var.lower():
+                    combined_qss = combined_qss.replace(var, "#f5f5f5" if theme_name == "light" else "#2d2d2d")
+                elif "foreground" in var.lower() or "color" in var.lower():
+                    combined_qss = combined_qss.replace(var, "#333333" if theme_name == "light" else "#e0e0e0")
+                elif "border" in var.lower():
+                    combined_qss = combined_qss.replace(var, "#d0d0d0" if theme_name == "light" else "#555555")
+                else:
+                    combined_qss = combined_qss.replace(var, "#cccccc")  # Neutral gray fallback
+        
+        # Additional clean-up to catch any syntax errors
+        # Check for unmatched braces - a common cause of parse errors
+        if combined_qss.count('{') != combined_qss.count('}'):
+            self.logger.warning("Unmatched braces in stylesheet - attempting to fix")
+            # Simple fix - add missing closing braces if needed
+            while combined_qss.count('{') > combined_qss.count('}'):
+                combined_qss += '}'
         
         # Apply the stylesheet
         app = QApplication.instance()
         if app:
-            app.setStyleSheet(combined_qss)
-            self.logger.debug("Applied theme stylesheet to application")
+            try:
+                app.setStyleSheet(combined_qss)
+                self.logger.debug("Applied theme stylesheet to application")
+            except Exception as e:
+                # If there's still an error, log it and fall back to a minimal stylesheet
+                self.logger.error(f"Failed to apply full stylesheet: {e}")
+                # Apply a minimal working stylesheet as fallback
+                fallback_qss = f"""
+                QWidget {{ 
+                    background-color: {self.variables[theme_name]['background']}; 
+                    color: {self.variables[theme_name]['foreground']}; 
+                }}
+                QPushButton {{ 
+                    background-color: {self.variables[theme_name]['primary']}; 
+                    color: white; 
+                    padding: 5px 10px; 
+                    border-radius: 3px; 
+                }}
+                """
+                app.setStyleSheet(fallback_qss)
+                self.logger.info("Applied fallback minimal stylesheet")
         else:
             self.logger.error("Failed to apply theme: No QApplication instance found")
 

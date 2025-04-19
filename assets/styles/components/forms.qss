@@ -1,8 +1,6 @@
-/* Form layout styles */
+
 
 QFormLayout {
-    /* Style the form layout itself */
-    /* You might want to add spacing between rows here */
     rowSpacing: 10;
     columnSpacing: 15;
 }
@@ -21,20 +19,18 @@ QFormLayout QLineEdit,
 QFormLayout QTextEdit,
 QFormLayout QSpinBox,
 QFormLayout QComboBox {
-    /* Style form fields */
     border: 1px solid ${var.border};
     border-radius: 3px;
     padding: 5px;
     selection-background-color: ${var.primary};
     background-color: ${var.background};
     color: ${var.foreground};
-    /* Add spacing around fields */
     margin-top: 2px;
     margin-bottom: 2px;
 }
 
 QFormLayout QLineEdit {
-    min-height: 24px; /* Ensure consistent height */
+    min-height: 24px; 
 }
 
 QFormLayout QTextEdit {
@@ -50,12 +46,10 @@ QFormLayout QComboBox {
 }
 
 QFormLayout QCheckBox {
-    /* Style checkboxes within forms */
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-/* Add styles for form groups (if used) */
 QGroupBox {
     margin-top: 1em;
     margin-bottom: 1em;
@@ -71,4 +65,3 @@ QGroupBox::title {
     font-weight: bold;
 }
 
-/* Add more form-related styles */

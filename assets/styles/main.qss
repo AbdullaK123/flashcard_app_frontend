@@ -1,6 +1,4 @@
-/* Global styles for the Flashcard App */
 
-/* Base styles for common widgets */
 QWidget {
     font-family: sans-serif;
     font-size: 14px;
@@ -65,7 +63,7 @@ QProgressBar {
     text-align: center;
     border: 1px solid ${var.border};
     border-radius: 3px;
-    background-color: #f0f0f0; /* Default background */
+    background-color: #f0f0f0; 
     color: ${var.foreground};
 }
 
@@ -82,7 +80,7 @@ QTableWidget {
 }
 
 QHeaderView::section {
-    background-color: #f0f0f0;
+    background-color: black;
     color: ${var.foreground};
     border: none;
     border-bottom: 1px solid ${var.border};
@@ -111,9 +109,6 @@ QScrollBar::sub-line:vertical {
     background: none;
 }
 
-/* Specific widget adjustments (if needed globally) */
 QTextEdit {
     font-size: 14px;
 }
-
-/* Add more global styles as needed */

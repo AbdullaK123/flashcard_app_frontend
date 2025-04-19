@@ -126,6 +126,7 @@ class StudyView(ResponsiveView):
         self.preview_card_list.edit_requested.connect(self.edit_card)
         self.preview_card_list.delete_requested.connect(self.delete_card)
         self.preview_card_list.card_selected.connect(self.preview_card)
+        self.preview_card_list.preview_requested.connect(self.preview_card)
         self.preview_card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         preview_layout.addWidget(self.preview_card_list)
         
@@ -253,6 +254,7 @@ class StudyView(ResponsiveView):
         self.study_card_list.set_title("Cards in Session")
         self.study_card_list.setProperty("class", "card-list")  # Add class for styling
         self.study_card_list.card_selected.connect(self.go_to_card)
+        self.study_card_list.preview_requested.connect(self.preview_study_card)
         self.study_card_list.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         
         # Add both sides to splitter
@@ -299,6 +301,7 @@ class StudyView(ResponsiveView):
         
         self.results_card_list = CardListWidget(show_toolbar=False, read_only=True)
         self.results_card_list.setProperty("class", "card-list")  # Add class for styling
+        self.results_card_list.preview_requested.connect(self.preview_study_card)
         self.results_card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         session_cards_layout.addWidget(self.results_card_list)
         
@@ -777,8 +780,7 @@ class StudyView(ResponsiveView):
         self.stacked_widget.setCurrentIndex(0)
 
     def preview_card(self, card_id):
-        """Preview a card when selected in the list."""
-        # Use preview_card_list, not study_card_list
+        """Preview a card when selected in the preview list."""
         card = self.preview_card_list.get_card(card_id)
         if card:
             QMessageBox.information(
@@ -786,6 +788,18 @@ class StudyView(ResponsiveView):
                 "Card Preview",
                 f"Question:\n{card.question}\n\nAnswer:\n{card.answer}"
             )
+
+    def preview_study_card(self, card_id):
+        """Preview a card when selected in the study list."""
+        # Find the card in the current study session cards
+        for card in self.cards:
+            if card.id == card_id:
+                QMessageBox.information(
+                    self,
+                    "Card Preview",
+                    f"Question:\n{card.question}\n\nAnswer:\n{card.answer}"
+                )
+                break
 
     @handle_errors(dialog_title="Create Error")
     def create_new_card(self):

@@ -1,4 +1,3 @@
-/* Button styles */
 
 QPushButton {
     background-color: #f0f0f0;
@@ -23,7 +22,6 @@ QPushButton:disabled {
     border-color: #bbbbbb;
 }
 
-/* Primary button (e.g., action buttons) */
 QPushButton.primary {
     background-color: ${var.primary};
     color: white;
@@ -37,7 +35,6 @@ QPushButton.primary:pressed {
     background-color: #307ffe;
 }
 
-/* Danger button (e.g., delete) */
 QPushButton.danger {
     background-color: ${var.error};
     color: white;
@@ -50,5 +47,3 @@ QPushButton.danger:hover {
 QPushButton.danger:pressed {
     background-color: #d13f32;
 }
-
-/* Add more button variations as needed */

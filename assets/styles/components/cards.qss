@@ -1,26 +1,26 @@
-/* Card styles for flashcard display with improved spacing and style */
+
 
 QFrame.card {
     border: 1px solid ${var.border};
-    border-radius: 12px; /* More rounded corners */
+    border-radius: 12px; 
     background-color: white;
-    padding: 35px; /* Increased padding */
-    min-height: 300px; /* Taller minimum height */
-    margin: 20px; /* Added more margin around cards */
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+    padding: 35px;
+    min-height: 300px; 
+    margin: 20px; 
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); 
 }
 
 QFrame.card-dark {
     background-color: #3a3a3a;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Darker shadow for dark mode */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); 
 }
 
 QLabel.card-content {
-    font-size: 20pt; /* Larger font */
+    font-size: 20pt; 
     font-weight: bold;
-    padding: 40px; /* Increased padding */
-    margin: 15px; /* Added margin */
-    line-height: 1.5; /* Added line height for better text spacing */
+    padding: 40px; 
+    margin: 15px; 
+    line-height: 1.5; 
 }
 
 QLabel.card-question {
@@ -31,7 +31,7 @@ QLabel.card-answer {
     color: #4285F4;
 }
 
-/* For dark mode */
+
 .card-dark QLabel.card-question {
     color: #e0e0e0;
 }
@@ -40,23 +40,23 @@ QLabel.card-answer {
     color: #5294FF;
 }
 
-/* Card navigation buttons with improved spacing and style */
+
 QPushButton.card-nav-button {
-    min-width: 60px; /* Wider buttons */
-    min-height: 36px; /* Taller buttons */
-    padding: 10px 20px; /* Increased padding */
+    min-width: 60px; 
+    min-height: 36px; 
+    padding: 10px 20px; 
     font-weight: bold;
-    margin: 15px; /* Added margin between buttons */
+    margin: 15px; 
     border-radius: 6px;
 }
 
 QPushButton.correct-button {
     background-color: #34A853;
-    padding: 12px 25px; /* Even more padding for action buttons */
-    margin: 0 20px; /* Horizontal margin */
+    padding: 12px 25px; 
+    margin: 0 20px; 
     color: white;
 }
-/* Card list widget styles */
+
 
 QListWidget {
     padding: 5px;
@@ -78,10 +78,8 @@ QListWidget::item:hover {
     background-color: #e8f0fe;
 }
 
-/* Flashcard widget styles */
-
 QFrame#flashcardFrame {
     border: 2px solid ${var.border};
     border-radius: 10px;
-    background-color: white; /* Default card background */
+    background-color: white; 
 }

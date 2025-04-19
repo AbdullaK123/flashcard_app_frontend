@@ -1,4 +1,4 @@
-/* Dialog styles */
+
 
 QDialog {
     background-color: ${var.background};
@@ -7,29 +7,11 @@ QDialog {
     border-radius: 8px;
 }
 
-/* Specific dialogs */
-
-QDialog#settingsDialog {
-    /* Add specific settings dialog styling */
-}
-
-QDialog#aboutDialog {
-    /* Add specific about dialog styling */
-}
-
-QDialog#newCardDialog, QDialog#editCardDialog {
-    /* Add specific card dialog styling */
-}
-
-/* Common elements within dialogs */
-
 QDialog QLabel {
-    /* Style labels within dialogs */
     color: ${var.foreground};
 }
 
 QDialog QPushButton {
-    /* Style buttons within dialogs */
     background-color: #f0f0f0;
     color: ${var.foreground};
     border: 1px solid ${var.border};
@@ -47,15 +29,12 @@ QDialog QPushButton:pressed {
 }
 
 QDialog QDialogButtonBox {
-    /* Style the button box */
-    /* You might want to adjust alignment or spacing here */
     alignment: Qt.AlignmentFlag.AlignHCenter;
     margin-top: 20px;
     margin-bottom: 10px;
 }
 
 QDialog QGroupBox {
-    /* Style group boxes within dialogs */
     border: 1px solid ${var.border};
     border-radius: 5px;
     margin-top: 10px;
@@ -67,5 +46,3 @@ QDialog QGroupBox::title {
     color: ${var.foreground};
     padding: 5px;
 }
-
-/* Add more dialog-specific styles */

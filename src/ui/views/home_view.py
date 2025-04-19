@@ -195,7 +195,7 @@ class HomeView(ResponsiveView):
 
         # Card list widget
         self.card_list = CardListWidget()
-        self.card_list.list_widget.itemDoubleClicked.connect(self.preview_card)
+        self.card_list.preview_requested.connect(self.preview_card)
         self.card_list.edit_requested.connect(self.edit_card)
         self.card_list.delete_requested.connect(self.delete_card)
         self.card_list.create_requested.connect(self.show_new_card_with_topic_dialog)
@@ -389,9 +389,8 @@ class HomeView(ResponsiveView):
         # Add to card list
         self.card_list.add_cards(recent_cards)
 
-    def preview_card(self, item):
-        """Preview a card when it's double-clicked in the list."""
-        card_id = item.data(Qt.ItemDataRole.UserRole)
+    def preview_card(self, card_id):
+        """Preview a card when requested."""
         card = self.card_list.get_card(card_id)
         if card:
             QMessageBox.information(

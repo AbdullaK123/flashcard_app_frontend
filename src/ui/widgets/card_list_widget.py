@@ -14,6 +14,7 @@ class CardListWidget(QWidget):
     
     # Signals for communication with parent widgets
     card_selected = pyqtSignal(str)  # Emits card ID when selected
+    preview_requested = pyqtSignal(str)  # Emits card ID when preview requested - NEW SIGNAL
     edit_requested = pyqtSignal(str)  # Emits card ID when edit requested
     delete_requested = pyqtSignal(str)  # Emits card ID when delete requested
     create_requested = pyqtSignal()  # Emits when user wants to create a new card
@@ -51,6 +52,7 @@ class CardListWidget(QWidget):
         self.list_widget = QListWidget()
         self.list_widget.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.list_widget.itemClicked.connect(self.on_item_clicked)
+        # FIX: Connect double-click to preview instead of on_item_double_clicked
         self.list_widget.itemDoubleClicked.connect(self.on_item_double_clicked)
         self.list_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.list_widget.customContextMenuRequested.connect(self.show_context_menu)
@@ -321,13 +323,10 @@ class CardListWidget(QWidget):
         self.update_button_states()
     
     def on_item_double_clicked(self, item):
-        """Handle item double-clicked event."""
-        if self.read_only:
-            # Just emit selection signal
-            self.card_selected.emit(item.data(Qt.ItemDataRole.UserRole))
-        else:
-            # Edit the card
-            self.edit_selected_card()
+        """Handle item double-clicked event - FIX: Always emit preview_requested."""
+        card_id = item.data(Qt.ItemDataRole.UserRole)
+        # Always emit the preview signal, regardless of read_only status
+        self.preview_requested.emit(card_id)
     
     def update_button_states(self):
         """Update button enabled states based on selection."""
@@ -386,8 +385,10 @@ class CardListWidget(QWidget):
             menu.addSeparator()
             
             # Add actions for selected item
+            # FIX: Change view action to trigger preview signal
             view_action = QAction("View Card", self)
-            view_action.triggered.connect(lambda: self.card_selected.emit(item.data(Qt.ItemDataRole.UserRole)))
+            card_id = item.data(Qt.ItemDataRole.UserRole)
+            view_action.triggered.connect(lambda: self.preview_requested.emit(card_id))
             menu.addAction(view_action)
             
             edit_action = QAction("Edit Card", self)

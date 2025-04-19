@@ -1,4 +1,3 @@
-/* Light theme overrides */
 
 QWidget {
     background-color: ${light.background};
@@ -17,5 +16,3 @@ QTableWidget {
 QHeaderView::section {
     background-color: #f0f0f0;
 }
-
-/* Add more light theme overrides */

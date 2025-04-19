@@ -36,55 +36,52 @@ class CardListWidget(QWidget):
     
     @handle_errors(dialog_title="UI Error")
     def setup_ui(self):
-        """Set up the user interface."""
+        """Set up the user interface with modern styling."""
         # Main layout
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(8)
+        layout.setSpacing(16)
         
-        # Create header and instructions
+        # Create header container
+        header_container = QWidget()
+        header_layout = QHBoxLayout(header_container)
+        header_layout.setContentsMargins(8, 0, 8, 0)
+        header_layout.setSpacing(8)
+        
+        # Header title
         self.header_label = QLabel("Flashcards")
-        self.header_label.setStyleSheet("font-weight: bold;")
+        self.header_label.setProperty("class", "h3")
         self.header_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        layout.addWidget(self.header_label)
+        header_layout.addWidget(self.header_label)
+        
+        # Add header to main layout
+        layout.addWidget(header_container)
         
         # Create list widget
         self.list_widget = QListWidget()
         self.list_widget.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.list_widget.itemClicked.connect(self.on_item_clicked)
-        # FIX: Connect double-click to preview instead of on_item_double_clicked
         self.list_widget.itemDoubleClicked.connect(self.on_item_double_clicked)
         self.list_widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.list_widget.customContextMenuRequested.connect(self.show_context_menu)
-        self.list_widget.setAlternatingRowColors(True)
+        # Turn off alternating row colors to fix the issue
+        self.list_widget.setAlternatingRowColors(False)
         self.list_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         
-        # Set style properties to improve readability
+        # Set list item height for better readability and ensure all items have same background
         self.list_widget.setStyleSheet("""
-            QListWidget {
-                padding: 5px;
-                border-radius: 5px;
-                border: 1px solid #cccccc;
-            }
             QListWidget::item {
-                border-bottom: 1px solid #eeeeee;
-                padding: 8px 5px;
-            }
-            QListWidget::item:selected {
-                background-color: #4285F4;
-                color: white;
-            }
-            QListWidget::item:hover {
-                background-color: #e8f0fe;
+                min-height: 32px;
+                background-color: transparent;
             }
         """)
         
         layout.addWidget(self.list_widget)
         
-        # Add Empty message when list is empty
+        # Add empty state message
         self.empty_label = QLabel("No flashcards in this list")
+        self.empty_label.setProperty("class", "muted")
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.empty_label.setStyleSheet("color: #888; font-style: italic; padding: 20px;")
         self.empty_label.setVisible(False)
         self.empty_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         layout.addWidget(self.empty_label)
@@ -92,12 +89,15 @@ class CardListWidget(QWidget):
         # Only show toolbar if requested
         if self.show_toolbar:
             # Create toolbar - horizontal by default
-            self.toolbar_layout = QHBoxLayout()
-            self.toolbar_layout.setSpacing(8)
+            toolbar_container = QWidget()
+            toolbar_container.setProperty("class", "card-toolbar")
+            self.toolbar_layout = QHBoxLayout(toolbar_container)
+            self.toolbar_layout.setContentsMargins(8, 8, 8, 8)
+            self.toolbar_layout.setSpacing(16)
             
             # New button
             self.new_button = QPushButton("New Card")
-            self.new_button.setIcon(QIcon.fromTheme("document-new"))
+            self.new_button.setProperty("class", "primary")
             self.new_button.clicked.connect(self.create_new_card)
             self.new_button.setEnabled(not self.read_only)
             self.new_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
@@ -108,7 +108,7 @@ class CardListWidget(QWidget):
             
             # Edit button
             self.edit_button = QPushButton("Edit")
-            self.edit_button.setIcon(QIcon.fromTheme("document-edit"))
+            self.edit_button.setProperty("class", "secondary")
             self.edit_button.clicked.connect(self.edit_selected_card)
             self.edit_button.setEnabled(False)
             self.edit_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
@@ -116,13 +116,16 @@ class CardListWidget(QWidget):
             
             # Delete button
             self.delete_button = QPushButton("Delete")
-            self.delete_button.setIcon(QIcon.fromTheme("edit-delete"))
+            self.delete_button.setProperty("class", "danger")
             self.delete_button.clicked.connect(self.delete_selected_card)
             self.delete_button.setEnabled(False)
             self.delete_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
             self.toolbar_layout.addWidget(self.delete_button)
             
-            layout.addLayout(self.toolbar_layout)
+            layout.addWidget(toolbar_container)
+        
+        # Update the empty state visibility
+        self.update_empty_state()
     
     def handle_resize(self, width, height):
         """Handle resize events to adapt layout."""

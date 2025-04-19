@@ -1,48 +1,181 @@
-
+/* Modern Dialog Styling */
 
 QDialog {
     background-color: ${var.background};
     color: ${var.foreground};
-    border: none;
-    border-radius: 8px;
+    border: 1px solid ${var.border};
+    border-radius: 12px;
+    min-width: 400px;
 }
 
-QDialog QLabel {
+QDialog .QLabel {
     color: ${var.foreground};
+}
+
+QDialog .QLabel#dialogTitle {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 16px 0;
+    color: ${var.foreground};
+}
+
+QDialog .QLabel#dialogSubtitle {
+    font-size: 14px;
+    color: ${var.textMuted};
+    padding-bottom: 16px;
 }
 
 QDialog QPushButton {
-    background-color: #f0f0f0;
+    background-color: ${var.backgroundAlt};
     color: ${var.foreground};
     border: 1px solid ${var.border};
-    border-radius: 3px;
-    padding: 8px 16px;
+    border-radius: 6px;
+    padding: 10px 16px;
     margin: 2px;
 }
 
 QDialog QPushButton:hover {
-    background-color: #e1e1e1;
+    background-color: ${var.borderDark};
 }
 
 QDialog QPushButton:pressed {
-    background-color: #d0d0d0;
+    background-color: ${var.border};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
+}
+
+QDialog QPushButton.primary {
+    background-color: ${var.primary};
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
+QDialog QPushButton.primary:hover {
+    background-color: ${var.primaryHover};
+}
+
+QDialog QPushButton.primary:pressed {
+    background-color: ${var.primary};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
+}
+
+QDialog QPushButton.secondary {
+    background-color: ${var.secondary};
+    color: white;
+    border: none;
+}
+
+QDialog QPushButton.secondary:hover {
+    background-color: ${var.secondaryHover};
+}
+
+QDialog QPushButton.secondary:pressed {
+    background-color: ${var.secondary};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
+}
+
+QDialog QPushButton.danger {
+    background-color: ${var.error};
+    color: white;
+    border: none;
+}
+
+QDialog QPushButton.danger:hover {
+    background-color: #f44336; /* Slightly brighter red on hover */
+}
+
+QDialog QPushButton.danger:pressed {
+    background-color: ${var.error};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
 }
 
 QDialog QDialogButtonBox {
-    alignment: Qt.AlignmentFlag.AlignHCenter;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    alignment: Qt.AlignmentFlag.AlignRight;
+    margin-top: 24px;
+    margin-bottom: 16px;
+    padding: 8px;
+    border-top: 1px solid ${var.border};
 }
 
 QDialog QGroupBox {
     border: 1px solid ${var.border};
-    border-radius: 5px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    border-radius: 8px;
+    margin-top: 24px;
+    margin-bottom: 16px;
+    padding: 24px 16px 16px 16px;
+    background-color: ${var.cardBackground};
 }
 
 QDialog QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 16px;
+    top: -12px;
+    padding: 0 8px;
+    background-color: ${var.background};
+    color: ${var.textLight};
     font-weight: bold;
+}
+
+/* About dialog specific styling */
+#aboutDialog {
+    min-width: 500px;
+    min-height: 500px;
+}
+
+#aboutDialog #appName {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+#aboutDialog #appVersion {
+    font-size: 14px;
+    color: ${var.textMuted};
+    margin-bottom: 24px;
+}
+
+/* Edit card dialog */
+#editCardDialog, #newCardDialog {
+    min-width: 550px;
+    min-height: 450px;
+}
+
+/* Settings dialog */
+#settingsDialog {
+    min-width: 500px;
+}
+
+/* Message boxes */
+QMessageBox {
+    background-color: ${var.background};
     color: ${var.foreground};
-    padding: 5px;
+    border: 1px solid ${var.border};
+    border-radius: 12px;
+}
+
+QMessageBox QLabel {
+    color: ${var.foreground};
+    padding: 8px;
+}
+
+QMessageBox QPushButton {
+    min-width: 100px;
+}
+
+QMessageBox #qt_msgbox_informativelabel { /* The main text */
+    min-width: 300px;
+}
+
+QMessageBox QLabel#qt_msgbox_icon_label { /* The icon */
+    padding-right: 16px;
+}
+
+/* Tooltip styling */
+QToolTip {
+    background-color: ${var.background};
+    color: ${var.foreground};
+    border: 1px solid ${var.border};
+    border-radius: 4px;
+    padding: 6px;
+    opacity: 230;
 }

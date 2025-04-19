@@ -1,18 +1,63 @@
+/* Main application stylesheet with modern design - Fixed for PyQt */
 
+/* Base Styling */
 QWidget {
-    font-family: sans-serif;
+    font-family: 'Segoe UI', 'Open Sans', sans-serif;
     font-size: 14px;
-    color: ${var.foreground}; /* From variables */
+    color: ${var.foreground};
     background-color: ${var.background};
 }
 
+/* Typography */
+QLabel {
+    color: ${var.foreground};
+}
+
+QLabel.h1 {
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 16px;
+}
+
+QLabel.h2 {
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 12px;
+}
+
+QLabel.h3 {
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 8px;
+}
+
+QLabel.subtitle {
+    font-size: 16px;
+    color: ${var.textMuted};
+    padding-bottom: 8px; /* Added padding to fix overlap issue */
+    margin-bottom: 8px;  /* Added margin to fix overlap issue */
+}
+
+QLabel.muted {
+    color: ${var.textMuted};
+    font-style: italic;
+}
+
+QLabel.monospace {
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+/* Window Elements */
 QMainWindow {
     background-color: ${var.background};
 }
 
-QTabWidget::pane { /* The content area */
+/* Tab Styling */
+QTabWidget::pane {
     border: none;
     background-color: ${var.background};
+    border-radius: 4px;
+    padding: 6px;
 }
 
 QTabWidget::tab-bar {
@@ -20,11 +65,15 @@ QTabWidget::tab-bar {
 }
 
 QTabBar::tab {
-    background-color: ${var.background};
+    background-color: ${var.backgroundAlt};
     color: ${var.foreground};
     border: none;
-    padding: 8px 16px;
-    margin: 0px;
+    padding: 10px 20px;
+    margin: 2px 4px 0px 0px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    min-width: 100px;
+    font-weight: medium;
 }
 
 QTabBar::tab:selected {
@@ -32,83 +81,218 @@ QTabBar::tab:selected {
     color: white;
 }
 
+QTabBar::tab:hover:!selected {
+    background-color: ${var.borderDark};
+}
+
+/* Group Box Styling */
 QGroupBox {
-    margin-top: 1em;
-    margin-bottom: 1em;
+    font-weight: bold;
+    margin-top: 20px;
+    padding-top: 28px;
     border: 1px solid ${var.border};
-    border-radius: 5px;
+    border-radius: 8px;
+    background-color: transparent;
 }
 
 QGroupBox::title {
     subcontrol-origin: margin;
-    left: 10px;
-    padding: 0 3px;
-    color: ${var.foreground};
+    subcontrol-position: top left;
+    background-color: ${var.background};
+    padding: 0px 8px;
+    left: 12px;
+    color: ${var.textLight};
 }
 
-QLabel {
-    color: ${var.foreground};
-}
-
+/* Form Elements */
 QLineEdit, QTextEdit, QSpinBox, QComboBox {
     border: 1px solid ${var.border};
-    border-radius: 3px;
-    padding: 5px;
-    selection-background-color: ${var.primary};
-    background-color: ${var.background};
+    border-radius: 6px;
+    padding: 8px 12px;
+    background-color: ${var.inputBackground};
     color: ${var.foreground};
+    selection-background-color: ${var.primary};
+    selection-color: white;
 }
 
+QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QComboBox:focus {
+    border: 1px solid ${var.primary};
+}
+
+QLineEdit:hover, QTextEdit:hover, QSpinBox:hover, QComboBox:hover {
+    border: 1px solid ${var.borderDark};
+}
+
+QLineEdit:disabled, QTextEdit:disabled, QSpinBox:disabled, QComboBox:disabled {
+    background-color: ${var.backgroundAlt};
+    color: ${var.textMuted};
+    border-color: ${var.border};
+}
+
+/* Progress Bar */
 QProgressBar {
     text-align: center;
-    border: 1px solid ${var.border};
-    border-radius: 3px;
-    background-color: #f0f0f0; 
+    border: none;
+    border-radius: 4px;
+    background-color: ${var.backgroundAlt};
     color: ${var.foreground};
+    min-height: 18px;
 }
 
 QProgressBar::chunk {
     background-color: ${var.primary};
-    border-radius: 2px;
+    border-radius: 4px;
 }
 
+/* Table Styling */
 QTableWidget {
     background-color: ${var.background};
     color: ${var.foreground};
     border: 1px solid ${var.border};
+    border-radius: 8px;
     gridline-color: ${var.border};
+    outline: none;
+    alternate-background-color: ${var.background}; /* Make alternate rows same color */
+}
+
+QTableWidget::item {
+    padding: 6px;
+    border-bottom: 1px solid ${var.border};
+    background-color: transparent; /* Ensure consistent background */
+}
+
+QTableWidget::item:selected {
+    background-color: ${var.primary};
+    color: white;
 }
 
 QHeaderView::section {
-    background-color: black;
+    background-color: ${var.backgroundAlt};
     color: ${var.foreground};
+    padding: 8px;
     border: none;
+    border-right: 1px solid ${var.border};
     border-bottom: 1px solid ${var.border};
-    padding: 4px;
+    font-weight: bold;
 }
 
+/* Scrollbar Styling */
 QScrollBar:vertical {
     border: none;
-    background: white;
-    width: 10px;
-    margin: 0px 0px 0px 0px;
+    background: ${var.backgroundAlt};
+    width: 12px;
+    margin: 0px;
+    border-radius: 6px;
 }
 
 QScrollBar::handle:vertical {
-    background: grey;
-    min-height: 20px;
+    background: ${var.borderDark};
+    min-height: 30px;
+    border-radius: 6px;
 }
 
-QScrollBar::add-line:vertical {
+QScrollBar::handle:vertical:hover {
+    background: ${var.textMuted};
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     border: none;
     background: none;
+    height: 0px;
 }
 
-QScrollBar::sub-line:vertical {
+QScrollBar:horizontal {
+    border: none;
+    background: ${var.backgroundAlt};
+    height: 12px;
+    margin: 0px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: ${var.borderDark};
+    min-width: 30px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: ${var.textMuted};
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
     border: none;
     background: none;
+    width: 0px;
 }
 
+/* Text Edit with larger font */
 QTextEdit {
     font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Splitter Styling */
+QSplitter::handle {
+    background-color: ${var.border};
+}
+
+QSplitter::handle:horizontal {
+    width: 2px;
+}
+
+QSplitter::handle:vertical {
+    height: 2px;
+}
+
+/* Status Bar */
+QStatusBar {
+    background-color: ${var.backgroundAlt};
+    color: ${var.foreground};
+    border-top: 1px solid ${var.border};
+    padding: 4px;
+}
+
+QStatusBar::item {
+    border: none;
+}
+
+/* Menus */
+QMenuBar {
+    background-color: ${var.background};
+    color: ${var.foreground};
+    border-bottom: 1px solid ${var.border};
+    padding: 2px;
+}
+
+QMenuBar::item {
+    background-color: transparent;
+    padding: 6px 12px;
+}
+
+QMenuBar::item:selected {
+    background-color: ${var.backgroundAlt};
+    border-radius: 4px;
+}
+
+QMenu {
+    background-color: ${var.background};
+    color: ${var.foreground};
+    border: 1px solid ${var.border};
+    border-radius: 8px;
+    padding: 8px 0px;
+}
+
+QMenu::item {
+    padding: 6px 32px 6px 20px;
+    border: none;
+}
+
+QMenu::item:selected {
+    background-color: ${var.backgroundAlt};
+}
+
+QMenu::separator {
+    height: 1px;
+    background-color: ${var.border};
+    margin: 6px 0px;
 }

@@ -48,9 +48,10 @@ class MainWindow(QMainWindow):
 
     @handle_errors(dialog_title="UI Error")
     def setup_ui(self):
-        """Set up the main window UI components."""
+        """Set up the main window UI components with modern styling."""
         # Set window properties
         self.setWindowTitle("Flashcard App")
+        self.setObjectName("mainWindow")
 
         # Create central widget
         self.central_widget = QWidget()
@@ -62,12 +63,12 @@ class MainWindow(QMainWindow):
         self.main_layout.setSpacing(0)  # Minimize spacing for maximizing content area
 
         # Create tab widget WITHOUT explicit parent initially
-        # self.tab_widget = QTabWidget(self.central_widget) # <-- Original line
-        self.tab_widget = QTabWidget() # <-- FIX: Create without parent
+        self.tab_widget = QTabWidget() 
         self.tab_widget.setDocumentMode(True)  # Cleaner tab appearance
         self.tab_widget.setTabPosition(QTabWidget.TabPosition.North)
         self.tab_widget.setMovable(True)  # Allow tab reordering
-
+        self.tab_widget.setObjectName("mainTabs")
+        
         # Create views
         self.home_view = HomeView(self.settings, self.storage)
         self.study_view = StudyView(self.settings, self.storage)
@@ -83,6 +84,7 @@ class MainWindow(QMainWindow):
 
         # Create status bar
         self.status_bar = QStatusBar(self)
+        self.status_bar.setObjectName("statusBar")
         self.setStatusBar(self.status_bar)
         self.status_bar.showMessage("Ready")
 

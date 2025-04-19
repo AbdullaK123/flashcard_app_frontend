@@ -1,27 +1,140 @@
 #studyCardContainer {
-    background-color: #f9f9f9; 
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
+    background-color: ${var.backgroundAlt}; 
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px ${var.shadow};
 }
 
 QLabel#session-info {
-    font-size: 1.2em;
+    font-size: 20px;
     font-weight: bold;
     color: ${var.foreground};
-    padding-bottom: 10px;
+    padding-bottom: 16px;
+    text-align: center;
 }
 
 .card-navigation {
-    background-color: #ffffff; 
+    background-color: ${var.cardBackground}; 
     border-top: 1px solid ${var.border};
-    padding: 10px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    padding: 16px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-top: 16px;
 }
 
 .action-buttons {
     background-color: transparent;
-    padding: 10px;
-    margin-top: 20px;
+    padding: 16px;
+    margin-top: 24px;
+    text-align: center;
+}
+
+/* Study progress container */
+#study-progress-container {
+    background-color: ${var.cardBackground};
+    border: 1px solid ${var.border};
+    border-radius: 8px;
+    padding: 12px;
+    margin: 8px 0;
+}
+
+QLabel#progress-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: ${var.textLight};
+}
+
+QProgressBar#study-progress {
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    background-color: ${var.backgroundAlt};
+    color: white;
+    min-height: 20px;
+    font-weight: bold;
+}
+
+QProgressBar#study-progress::chunk {
+    background-color: ${var.primary};
+    border-radius: 4px;
+}
+
+/* Deck selection area */
+#deckSelectionGroup {
+    background-color: ${var.cardBackground};
+    border: 1px solid ${var.border};
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+/* Results screen */
+#resultsWidget {
+    background-color: ${var.background};
+    padding: 24px;
+}
+
+#resultsGroup {
+    background-color: ${var.cardBackground};
+    border: 1px solid ${var.border};
+    border-radius: 12px;
+    padding: 24px;
+    margin: 16px 0;
+}
+
+/* Study statistics */
+.stats-container {
+    background-color: ${var.cardBackground};
+    border: 1px solid ${var.border};
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+}
+
+.stats-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: ${var.foreground};
+    margin-bottom: 12px;
+}
+
+.stats-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: ${var.primary};
+}
+
+.stats-label {
+    font-size: 12px;
+    color: ${var.textMuted};
+}
+
+/* Accuracy indicators */
+.accuracy-high {
+    color: ${var.success};
+}
+
+.accuracy-medium {
+    color: ${var.warning};
+}
+
+.accuracy-low {
+    color: ${var.error};
+}
+
+/* No cards placeholder */
+#no-cards-placeholder {
+    background-color: ${var.backgroundAlt};
+    border: 1px dashed ${var.border};
+    border-radius: 8px;
+    padding: 24px;
+    margin: 16px 0;
+    text-align: center;
+}
+
+#no-cards-placeholder QLabel {
+    font-size: 16px;
+    color: ${var.textMuted};
+    margin-bottom: 16px;
 }

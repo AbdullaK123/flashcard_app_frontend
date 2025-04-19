@@ -85,24 +85,26 @@ class HomeView(ResponsiveView):
 
     @handle_errors(dialog_title="UI Error")
     def setup_ui(self):
-        """Set up the user interface with responsive design."""
+        """Set up the user interface with responsive design and modern styling."""
         # Main layout
         main_layout = self.keep_reference(QVBoxLayout(self))
-        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setContentsMargins(24, 24, 24, 24)
+        main_layout.setSpacing(16)
 
         # Create a splitter to divide the view
         self.main_splitter = QSplitter(Qt.Orientation.Horizontal)
         self.main_splitter.setChildrenCollapsible(False)
 
-        # Create top widget container for form elements
+        # Create left widget container for form elements
         left_widget = QWidget()
         left_layout = self.keep_reference(QVBoxLayout(left_widget))
-        left_layout.setContentsMargins(20, 20, 20, 20)
+        left_layout.setContentsMargins(24, 24, 24, 24)
+        left_layout.setSpacing(16)
 
         # Title
         title_label = QLabel("Create New Flashcards")
+        title_label.setProperty("class", "h1")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
         title_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         left_layout.addWidget(title_label)
 
@@ -111,10 +113,14 @@ class HomeView(ResponsiveView):
             "Enter a topic and our AI will generate flashcards to help you study."
             " The AI uses web search to ensure accurate, up-to-date information."
         )
+        desc_label.setProperty("class", "subtitle")
         desc_label.setWordWrap(True)
         desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         desc_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         left_layout.addWidget(desc_label)
+        
+        # Add extra spacing to prevent overlap
+        left_layout.addSpacing(10)
 
         # Form group
         form_group = QGroupBox("Flashcard Generator")
@@ -122,76 +128,114 @@ class HomeView(ResponsiveView):
         form_layout = self.keep_reference(QFormLayout())
         form_layout.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.ExpandingFieldsGrow)
         form_group.setLayout(form_layout)
-        form_layout.setContentsMargins(20, 25, 20, 25)
+        form_layout.setContentsMargins(24, 32, 24, 24)
+        form_layout.setSpacing(16)
 
         # Topic input
+        topic_label = QLabel("Topic:")
+        topic_label.setProperty("class", "required")
         self.topic_input = QLineEdit()
         self.topic_input.setPlaceholderText("e.g., Python Programming, French Revolution, Quantum Physics")
         self.topic_input.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        form_layout.addRow("Topic:", self.topic_input)
+        form_layout.addRow(topic_label, self.topic_input)
+        
+        # Add help text
+        topic_help = QLabel("Enter the subject you want to create flashcards for")
+        topic_help.setProperty("class", "help-text")
+        form_layout.addRow("", topic_help)
 
         # Number of cards
+        num_cards_label = QLabel("Number of cards:")
         self.num_cards_input = QSpinBox()
         self.num_cards_input.setMinimum(5)
         self.num_cards_input.setMaximum(40)  # Limit to 40 cards
         self.num_cards_input.setValue(10)
         self.num_cards_input.setSingleStep(5)
         self.num_cards_input.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        form_layout.addRow("Number of cards:", self.num_cards_input)
+        form_layout.addRow(num_cards_label, self.num_cards_input)
+        
+        # Add help text
+        cards_help = QLabel("More cards will take longer to generate")
+        cards_help.setProperty("class", "help-text")
+        form_layout.addRow("", cards_help)
 
         # Additional notes
+        notes_label = QLabel("Additional notes:")
         self.notes_input = QTextEdit()
         self.notes_input.setPlaceholderText("Any specific areas to focus on? (optional)")
-        self.notes_input.setMaximumHeight(100)
+        self.notes_input.setMaximumHeight(120)
         self.notes_input.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        form_layout.addRow("Additional notes:", self.notes_input)
+        form_layout.addRow(notes_label, self.notes_input)
+        
+        # Add help text
+        notes_help = QLabel("Optional details to customize your flashcards")
+        notes_help.setProperty("class", "help-text")
+        form_layout.addRow("", notes_help)
 
         left_layout.addWidget(form_group)
 
         # Progress area
+        progress_container = QWidget()
+        progress_container.setObjectName("progress-container")
+        progress_layout = QVBoxLayout(progress_container)
+        progress_layout.setContentsMargins(16, 16, 16, 16)
+        
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 0)  # Indeterminate
         self.progress_bar.setVisible(False)
         self.progress_bar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        left_layout.addWidget(self.progress_bar)
+        progress_layout.addWidget(self.progress_bar)
 
         # Status label
         self.status_label = QLabel()
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_label.setVisible(False)
+        self.status_label.setProperty("class", "subtitle")
         self.status_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        left_layout.addWidget(self.status_label)
+        progress_layout.addWidget(self.status_label)
+        
+        left_layout.addWidget(progress_container)
 
-        # Button area - add directly to top_layout
+        # Button area
         button_layout = self.keep_reference(QHBoxLayout())
+        button_layout.setContentsMargins(16, 16, 16, 16)
+        button_layout.setSpacing(16)
         button_layout.addStretch(1)
 
         # Clear button
         self.clear_button = QPushButton("Clear")
+        self.clear_button.setProperty("class", "flat")
         self.clear_button.clicked.connect(self.clear_form)
         self.clear_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         button_layout.addWidget(self.clear_button)
 
         # Generate button
         self.generate_button = QPushButton("Generate Flashcards")
+        self.generate_button.setProperty("class", "primary")
         self.generate_button.clicked.connect(self.generate_flashcards)
         self.generate_button.setDefault(True)
         self.generate_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         button_layout.addWidget(self.generate_button)
 
         button_layout.addStretch(1)
-        left_layout.addLayout(button_layout)  # Add buttons to top_layout
+        left_layout.addLayout(button_layout)
 
-        # --- Bottom section for recent cards ---
+        # --- Right section for recent cards ---
         right_widget = QWidget()
         right_layout = self.keep_reference(QVBoxLayout(right_widget))
-        right_layout.setContentsMargins(20, 20, 20, 20)
+        right_layout.setContentsMargins(24, 24, 24, 24)
+        right_layout.setSpacing(16)
 
         # Recent cards label
         recent_cards_label = QLabel("Recent Flashcards")
-        recent_cards_label.setStyleSheet("font-size: 18px; font-weight: bold;")
+        recent_cards_label.setProperty("class", "h2")
         recent_cards_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         right_layout.addWidget(recent_cards_label)
+        
+        # Add subtitle
+        recent_cards_desc = QLabel("Recently created flashcards from all decks")
+        recent_cards_desc.setProperty("class", "subtitle")
+        right_layout.addWidget(recent_cards_desc)
 
         # Card list widget
         self.card_list = CardListWidget()
@@ -206,8 +250,8 @@ class HomeView(ResponsiveView):
         self.main_splitter.addWidget(left_widget)
         self.main_splitter.addWidget(right_widget)
 
-        # Set initial sizes (60% top, 40% bottom)
-        self.main_splitter.setSizes([600, 600])
+        # Set initial sizes (50% each)
+        self.main_splitter.setSizes([int(self.width() * 0.5), int(self.width() * 0.5)])
 
         # Add splitter to main layout
         main_layout.addWidget(self.main_splitter)

@@ -39,12 +39,16 @@ class StudyView(ResponsiveView):
 
         self.logger.info("StudyView initialized")
 
+    def select_preview_card(self):
+        pass
+
     @handle_errors(dialog_title="UI Error")
     def setup_ui(self):
-        """Set up the user interface with responsive layouts."""
+        """Set up the user interface with responsive layouts and modern styling."""
         # Main layout
         main_layout = self.keep_reference(QVBoxLayout(self))
-        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setContentsMargins(24, 24, 24, 24)
+        main_layout.setSpacing(16)
         
         # Add class name to the view for styling
         self.setProperty("class", "study-view")
@@ -56,14 +60,21 @@ class StudyView(ResponsiveView):
         # --- 1. Deck Selection Screen ---
         deck_selection_widget = QWidget()
         deck_layout = self.keep_reference(QVBoxLayout(deck_selection_widget))
-        deck_layout.setContentsMargins(20, 20, 20, 20)  # Add more padding
+        deck_layout.setContentsMargins(24, 24, 24, 24)
+        deck_layout.setSpacing(16)
         
         # Title with responsive styling
         deck_title = QLabel("Study Flashcards")
+        deck_title.setProperty("class", "h1")
         deck_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        deck_title.setStyleSheet("font-size: 24px; font-weight: bold;")
         deck_title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         deck_layout.addWidget(deck_title)
+        
+        # Add subtitle
+        deck_subtitle = QLabel("Choose a deck to review and test your knowledge")
+        deck_subtitle.setProperty("class", "subtitle")
+        deck_subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        deck_layout.addWidget(deck_subtitle)
         
         # Create a splitter for deck selection and preview
         self.selection_splitter = QSplitter(Qt.Orientation.Vertical)
@@ -74,29 +85,33 @@ class StudyView(ResponsiveView):
         deck_selection_sub_widget = QWidget()
         deck_selection_sub_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         deck_selection_layout = self.keep_reference(QVBoxLayout(deck_selection_sub_widget))
-        deck_selection_layout.setContentsMargins(15, 15, 15, 15)  # Add more padding
+        deck_selection_layout.setContentsMargins(16, 16, 16, 16)
+        deck_selection_layout.setSpacing(16)
         
         # Deck selection group box
         deck_group = QGroupBox("Select a Deck to Study")
-        deck_group.setObjectName("deckSelectionGroup")  # Add ID for styling
+        deck_group.setObjectName("deckSelectionGroup")
         deck_group.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         deck_group_layout = self.keep_reference(QVBoxLayout(deck_group))
-        deck_group_layout.setContentsMargins(20, 25, 20, 25)  # Add more padding
+        deck_group_layout.setContentsMargins(24, 32, 24, 24)
+        deck_group_layout.setSpacing(16)
         
         # Controls in horizontal layout with responsive spacing
         deck_controls = self.keep_reference(QHBoxLayout())
-        deck_controls.setSpacing(20)  # Increased spacing
-        deck_controls.setContentsMargins(15, 10, 15, 10)  # Add more padding
+        deck_controls.setSpacing(16)
+        deck_controls.setContentsMargins(16, 8, 16, 8)
         
         self.deck_combo = QComboBox()
+        self.deck_combo.setObjectName("deckSelector")
         self.deck_combo.setMinimumWidth(300)
         self.deck_combo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         deck_controls.addWidget(self.deck_combo, 3)
         
         # Add spacer for better horizontal spacing
-        deck_controls.addSpacing(20)
+        deck_controls.addSpacing(16)
         
         self.start_button = QPushButton("Start Studying")
+        self.start_button.setProperty("class", "primary")
         self.start_button.clicked.connect(self.start_study_session)
         self.start_button.setEnabled(False)
         self.start_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
@@ -108,7 +123,7 @@ class StudyView(ResponsiveView):
         # Description of selected deck
         self.deck_description = QLabel()
         self.deck_description.setWordWrap(True)
-        self.deck_description.setStyleSheet("font-style: italic; color: #666; padding: 15px;")
+        self.deck_description.setProperty("class", "subtitle")
         self.deck_description.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         deck_selection_layout.addWidget(self.deck_description)
         
@@ -116,18 +131,24 @@ class StudyView(ResponsiveView):
         preview_widget = QWidget()
         preview_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         preview_layout = self.keep_reference(QVBoxLayout(preview_widget))
-        preview_layout.setContentsMargins(15, 15, 15, 15)  # Add more padding
+        preview_layout.setContentsMargins(16, 16, 16, 16)
+        preview_layout.setSpacing(16)
+        
+        # Preview title
+        preview_title = QLabel("Cards in this Deck")
+        preview_title.setProperty("class", "h2")
+        preview_layout.addWidget(preview_title)
         
         # Card list with ability to add/edit cards
         self.preview_card_list = CardListWidget()
-        self.preview_card_list.set_title("Cards in this Deck")
-        self.preview_card_list.setProperty("class", "card-list")  # Add class for styling
+        self.preview_card_list.setProperty("class", "card-list")
         self.preview_card_list.create_requested.connect(self.create_new_card)
         self.preview_card_list.edit_requested.connect(self.edit_card)
         self.preview_card_list.delete_requested.connect(self.delete_card)
-        self.preview_card_list.card_selected.connect(self.preview_card)
-        self.preview_card_list.preview_requested.connect(self.preview_card)
-        self.preview_card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.preview_card_list.card_selected.connect(self.select_preview_card)  # Single click just selects
+        self.preview_card_list.preview_requested.connect(self.preview_card)     # Double click previews
+        self.preview_card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.MinimumExpanding)
+        self.preview_card_list.setContentsMargins(24, 24, 24, 24)
         preview_layout.addWidget(self.preview_card_list)
         
         # Add widgets to splitter
@@ -135,14 +156,15 @@ class StudyView(ResponsiveView):
         self.selection_splitter.addWidget(preview_widget)
         
         # Default size proportion
-        self.selection_splitter.setSizes([400, 600])
+        self.selection_splitter.setSizes([int(self.height() * 0.4), int(self.height() * 0.6)])
         
         deck_layout.addWidget(self.selection_splitter)
         
         # --- 2. Study Screen ---
         study_widget = QWidget()
         study_layout = self.keep_reference(QVBoxLayout(study_widget))
-        study_layout.setContentsMargins(20, 20, 20, 20)  # Add more padding
+        study_layout.setContentsMargins(24, 24, 24, 24)
+        study_layout.setSpacing(16)
         
         # Create splitter for flashcard and card list
         self.study_splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -151,55 +173,61 @@ class StudyView(ResponsiveView):
         
         # Left side - flashcard area
         flashcard_area_widget = QWidget()
-        flashcard_area_widget.setObjectName("studyCardContainer")  # Add ID for styling
+        flashcard_area_widget.setObjectName("studyCardContainer")
         flashcard_area_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.flashcard_layout = self.keep_reference(QVBoxLayout(flashcard_area_widget))
-        self.flashcard_layout.setContentsMargins(20, 20, 20, 20)  # Add more padding
+        self.flashcard_layout.setContentsMargins(24, 24, 24, 24)
+        self.flashcard_layout.setSpacing(16)
         
         # Deck info
         self.deck_info_label = QLabel()
         self.deck_info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.deck_info_label.setStyleSheet("font-size: 18px; font-weight: bold; padding: 15px;")
+        self.deck_info_label.setProperty("class", "h2")
+        self.deck_info_label.setObjectName("session-info")
         self.deck_info_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        self.deck_info_label.setProperty("class", "session-info")  # Add class for styling
         self.flashcard_layout.addWidget(self.deck_info_label)
         
-        # Progress
-        progress_layout = self.keep_reference(QHBoxLayout())
-        progress_layout.setContentsMargins(15, 10, 15, 10)  # Add more padding
-        progress_layout.setSpacing(15)  # Increased spacing
+        # Progress container
+        progress_container = QWidget()
+        progress_container.setObjectName("study-progress-container")
+        progress_layout = self.keep_reference(QHBoxLayout(progress_container))
+        progress_layout.setContentsMargins(16, 16, 16, 16)
+        progress_layout.setSpacing(16)
         
         self.progress_label = QLabel("Card 0 of 0")
+        self.progress_label.setObjectName("progress-label")
         self.progress_label.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         progress_layout.addWidget(self.progress_label)
         
-        progress_layout.addSpacing(20)  # Add horizontal spacing
+        progress_layout.addSpacing(16)
         
         self.progress_bar = QProgressBar()
+        self.progress_bar.setObjectName("study-progress")
         self.progress_bar.setRange(0, 100)
         self.progress_bar.setValue(0)
         self.progress_bar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         progress_layout.addWidget(self.progress_bar)
         
-        self.flashcard_layout.addLayout(progress_layout)
+        self.flashcard_layout.addWidget(progress_container)
         
         # Flashcard widget (will auto-scale)
         self.flashcard_widget = FlashcardWidget()
-        self.flashcard_widget.card_frame.setObjectName("flashcardFrame")  # Add ID for styling
+        self.flashcard_widget.card_frame.setObjectName("flashcardFrame")
         self.flashcard_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.flashcard_widget.card_flipped.connect(self.on_card_flipped)
         self.flashcard_layout.addWidget(self.flashcard_widget)
         
         # Control buttons in responsive grid layout
         self.controls_layout = self.keep_reference(QHBoxLayout())
-        self.controls_layout.setProperty("class", "card-navigation")  # Add class for styling
-        self.controls_layout.setContentsMargins(20, 15, 20, 15)  # Add more padding
-        self.controls_layout.setSpacing(25)  # Increased spacing
+        self.controls_layout.setObjectName("card-navigation")
+        self.controls_layout.setContentsMargins(24, 16, 24, 16)
+        self.controls_layout.setSpacing(16)
         
         # Add flexible spacing around buttons
         self.controls_layout.addStretch(1)
         
         self.prev_button = QPushButton("Previous")
+        self.prev_button.setProperty("class", "card-nav-button")
         self.prev_button.clicked.connect(self.show_previous_card)
         self.prev_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         self.controls_layout.addWidget(self.prev_button)
@@ -207,19 +235,20 @@ class StudyView(ResponsiveView):
         self.controls_layout.addStretch(1)
         
         self.flip_button = QPushButton("Flip Card")
+        self.flip_button.setProperty("class", "card-nav-button accent")
         self.flip_button.clicked.connect(self.flashcard_widget.flip_card)
         self.flip_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         self.controls_layout.addWidget(self.flip_button)
         
         self.correct_button = QPushButton("Mark Correct")
-        self.correct_button.setStyleSheet("background-color: #34A853; color: white;")
+        self.correct_button.setProperty("class", "correct-button")
         self.correct_button.clicked.connect(lambda: self.mark_card(True))
         self.correct_button.setVisible(False)
         self.correct_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         self.controls_layout.addWidget(self.correct_button)
         
         self.incorrect_button = QPushButton("Mark Incorrect")
-        self.incorrect_button.setStyleSheet("background-color: #EA4335; color: white;")
+        self.incorrect_button.setProperty("class", "incorrect-button")
         self.incorrect_button.clicked.connect(lambda: self.mark_card(False))
         self.incorrect_button.setVisible(False)
         self.incorrect_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
@@ -228,6 +257,7 @@ class StudyView(ResponsiveView):
         self.controls_layout.addStretch(1)
         
         self.next_button = QPushButton("Next")
+        self.next_button.setProperty("class", "card-nav-button")
         self.next_button.clicked.connect(self.show_next_card)
         self.next_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         self.controls_layout.addWidget(self.next_button)
@@ -238,10 +268,12 @@ class StudyView(ResponsiveView):
         
         # End button
         end_layout = self.keep_reference(QHBoxLayout())
-        end_layout.setContentsMargins(20, 15, 20, 15)  # Add more padding
+        end_layout.setContentsMargins(24, 16, 24, 16)
+        end_layout.setSpacing(16)
         end_layout.addStretch(1)
         
         self.end_button = QPushButton("End Study Session")
+        self.end_button.setProperty("class", "secondary")
         self.end_button.clicked.connect(self.end_study_session)
         self.end_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         end_layout.addWidget(self.end_button)
@@ -252,42 +284,45 @@ class StudyView(ResponsiveView):
         # Right side - card list
         self.study_card_list = CardListWidget(show_toolbar=False, read_only=True)
         self.study_card_list.set_title("Cards in Session")
-        self.study_card_list.setProperty("class", "card-list")  # Add class for styling
+        self.study_card_list.setProperty("class", "card-list")
         self.study_card_list.card_selected.connect(self.go_to_card)
         self.study_card_list.preview_requested.connect(self.preview_study_card)
         self.study_card_list.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        self.study_card_list.setContentsMargins(24, 24, 24, 24)
         
         # Add both sides to splitter
         self.study_splitter.addWidget(flashcard_area_widget)
         self.study_splitter.addWidget(self.study_card_list)
         
         # Set initial sizes (70% flashcard, 30% list)
-        self.study_splitter.setSizes([700, 300])
+        self.study_splitter.setSizes([int(self.width() * 0.7), int(self.width() * 0.3)])
         
         study_layout.addWidget(self.study_splitter)
         
         # --- 3. Results Screen ---
         results_widget = QWidget()
-        results_widget.setObjectName("resultsWidget")  # Add ID for styling
+        results_widget.setObjectName("resultsWidget")
         results_layout = self.keep_reference(QVBoxLayout(results_widget))
-        results_layout.setContentsMargins(25, 25, 25, 25)  # Add more padding
+        results_layout.setContentsMargins(24, 24, 24, 24)
+        results_layout.setSpacing(16)
         
         results_title = QLabel("Study Session Complete")
+        results_title.setProperty("class", "h1")
         results_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        results_title.setStyleSheet("font-size: 24px; font-weight: bold; padding: 15px;")
         results_title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         results_layout.addWidget(results_title)
         
         # Results box
         results_group = QGroupBox("Your Results")
-        results_group.setObjectName("resultsGroup")  # Add ID for styling
+        results_group.setObjectName("resultsGroup")
         results_group.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         results_group_layout = self.keep_reference(QVBoxLayout(results_group))
-        results_group_layout.setContentsMargins(25, 25, 25, 25)  # Add more padding
+        results_group_layout.setContentsMargins(24, 32, 24, 24)
+        results_group_layout.setSpacing(16)
         
         self.results_label = QLabel()
         self.results_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.results_label.setStyleSheet("font-size: 16px; padding: 15px;")
+        self.results_label.setStyleSheet("font-size: 16px; padding: 16px;")
         self.results_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         results_group_layout.addWidget(self.results_label)
         
@@ -297,10 +332,11 @@ class StudyView(ResponsiveView):
         session_cards_group = QGroupBox("Cards in This Session")
         session_cards_group.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         session_cards_layout = self.keep_reference(QVBoxLayout(session_cards_group))
-        session_cards_layout.setContentsMargins(20, 20, 20, 20)  # Add more padding
+        session_cards_layout.setContentsMargins(24, 32, 24, 24)
+        session_cards_layout.setSpacing(16)
         
         self.results_card_list = CardListWidget(show_toolbar=False, read_only=True)
-        self.results_card_list.setProperty("class", "card-list")  # Add class for styling
+        self.results_card_list.setProperty("class", "card-list")
         self.results_card_list.preview_requested.connect(self.preview_study_card)
         self.results_card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         session_cards_layout.addWidget(self.results_card_list)
@@ -309,18 +345,21 @@ class StudyView(ResponsiveView):
         
         # Buttons
         results_buttons = self.keep_reference(QHBoxLayout())
-        results_buttons.setProperty("class", "action-buttons")  # Add class for styling
-        results_buttons.setContentsMargins(15, 20, 15, 20)  # Add more padding
+        results_buttons.setObjectName("action-buttons")
+        results_buttons.setContentsMargins(16, 24, 16, 16)
+        results_buttons.setSpacing(16)
         results_buttons.addStretch(1)
         
         self.restart_button = QPushButton("Study Again")
+        self.restart_button.setProperty("class", "primary")
         self.restart_button.clicked.connect(self.restart_session)
         self.restart_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         results_buttons.addWidget(self.restart_button)
         
-        results_buttons.addSpacing(30)  # Add more spacing between buttons
+        results_buttons.addSpacing(24)
         
         self.finish_button = QPushButton("Return to Deck Selection")
+        self.finish_button.setProperty("class", "secondary")
         self.finish_button.clicked.connect(self.return_to_deck_selection)
         self.finish_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         results_buttons.addWidget(self.finish_button)

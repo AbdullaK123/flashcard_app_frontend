@@ -1,85 +1,159 @@
-
+/* Modern Flashcard Styling - Fixed for PyQt */
 
 QFrame.card {
     border: 1px solid ${var.border};
     border-radius: 12px; 
-    background-color: white;
-    padding: 35px;
-    min-height: 300px; 
+    background-color: ${var.cardBackground};
+    padding: 40px;
+    min-height: 320px; 
     margin: 20px; 
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); 
+    /* Removed box-shadow */
 }
 
 QFrame.card-dark {
-    background-color: #3a3a3a;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); 
+    background-color: ${var.cardBackground};
+    border-color: ${var.border};
+    /* Removed box-shadow */
 }
 
+/* Card content labels */
 QLabel.card-content {
-    font-size: 20pt; 
+    font-size: 22pt; 
     font-weight: bold;
+    line-height: 1.6; 
     padding: 40px; 
-    margin: 15px; 
-    line-height: 1.5; 
+    margin: 20px; 
+    text-align: center;
 }
 
+/* Question styling */
 QLabel.card-question {
-    color: #333333;
+    color: ${var.foreground};
 }
 
+/* Answer styling */
 QLabel.card-answer {
-    color: #4285F4;
+    color: ${var.primary};
 }
 
-
+/* Dark theme adjustments for questions */
 .card-dark QLabel.card-question {
-    color: #e0e0e0;
+    color: ${var.foreground};
 }
 
+/* Dark theme adjustments for answers */
 .card-dark QLabel.card-answer {
-    color: #5294FF;
+    color: ${var.primary};
 }
 
-
+/* Card navigation buttons */
 QPushButton.card-nav-button {
-    min-width: 60px; 
-    min-height: 36px; 
-    padding: 10px 20px; 
+    min-width: 64px; 
+    min-height: 40px; 
+    padding: 12px 24px; 
     font-weight: bold;
-    margin: 15px; 
-    border-radius: 6px;
+    margin: 16px; 
+    border-radius: 8px;
 }
 
+/* Correct button styling */
 QPushButton.correct-button {
-    background-color: #34A853;
-    padding: 12px 25px; 
+    background-color: ${var.success};
+    padding: 14px 28px; 
     margin: 0 20px; 
     color: white;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 8px;
 }
 
+QPushButton.correct-button:hover {
+    background-color: #33d979; /* Slightly brighter green */
+}
 
+/* Incorrect button styling */
+QPushButton.incorrect-button {
+    background-color: ${var.error};
+    padding: 14px 28px; 
+    margin: 0 20px; 
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 8px;
+}
+
+QPushButton.incorrect-button:hover {
+    background-color: #f44336; /* Slightly brighter red */
+}
+
+/* Card list styling */
 QListWidget {
-    padding: 5px;
-    border-radius: 5px;
+    padding: 8px;
+    border-radius: 8px;
     border: 1px solid ${var.border};
+    background-color: ${var.cardBackground};
 }
 
 QListWidget::item {
-    border-bottom: 1px solid #eeeeee;
-    padding: 8px 5px;
+    border-bottom: 1px solid ${var.border};
+    padding: 12px 8px;
+    margin: 2px 4px;
+    border-radius: 4px;
+    background-color: ${var.cardBackground}; /* Force same background color for all items */
 }
 
 QListWidget::item:selected {
     background-color: ${var.primary};
     color: white;
+    border-bottom: 1px solid ${var.primary};
 }
 
-QListWidget::item:hover {
-    background-color: #e8f0fe;
+QListWidget::item:hover:!selected {
+    background-color: ${var.backgroundAlt};
+    border-bottom: 1px solid ${var.borderDark};
 }
 
+/* Main flashcard frame */
 QFrame#flashcardFrame {
-    border: 2px solid ${var.border};
-    border-radius: 10px;
-    background-color: white; 
+    border: 1px solid ${var.border};
+    border-radius: 12px;
+    background-color: ${var.cardBackground}; 
+    /* Removed box-shadow */
+    padding: 20px;
+    margin: 10px;
+}
+
+/* Flippable card animation states */
+QFrame#flashcardFrame[flipped="true"] {
+    background-color: #f0f8ff; /* Light blue when flipped to answer */
+}
+
+/* Card states */
+QFrame.card-correct {
+    border: 2px solid ${var.success};
+    background-color: rgba(46, 204, 113, 0.1); /* Transparent green */
+}
+
+QFrame.card-incorrect {
+    border: 2px solid ${var.error};
+    background-color: rgba(231, 76, 60, 0.1); /* Transparent red */
+}
+
+/* Card deck selector */
+QComboBox#deckSelector {
+    border: 1px solid ${var.border};
+    border-radius: 8px;
+    padding: 12px;
+    background-color: ${var.cardBackground};
+    color: ${var.foreground};
+    min-height: 24px;
+    font-weight: bold;
+}
+
+/* Study progress container */
+QWidget#studyProgressWidget {
+    background-color: ${var.backgroundAlt};
+    border-radius: 8px;
+    padding: 16px;
+    margin: 10px 0;
 }

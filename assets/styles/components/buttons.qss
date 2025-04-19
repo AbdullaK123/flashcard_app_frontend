@@ -1,49 +1,217 @@
+/* Modern Button Styles */
 
 QPushButton {
-    background-color: #f0f0f0;
+    background-color: ${var.backgroundAlt};
     color: ${var.foreground};
     border: 1px solid ${var.border};
-    border-radius: 3px;
-    padding: 8px 16px;
+    border-radius: 6px;
+    padding: 10px 16px;
     margin: 2px;
+    font-weight: 500;
+    min-height: 20px;
+    min-width: 80px;
 }
 
 QPushButton:hover {
-    background-color: #e1e1e1;
+    background-color: ${var.borderDark};
+    border-color: ${var.borderDark};
 }
 
 QPushButton:pressed {
-    background-color: #d0d0d0;
+    background-color: ${var.border};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
 }
 
 QPushButton:disabled {
-    background-color: #cccccc;
-    color: #888888;
-    border-color: #bbbbbb;
+    background-color: ${var.backgroundAlt};
+    color: ${var.textMuted};
+    border-color: ${var.border};
 }
 
+/* Primary Button - For key actions */
 QPushButton.primary {
     background-color: ${var.primary};
     color: white;
+    border: none;
+    font-weight: bold;
 }
 
 QPushButton.primary:hover {
-    background-color: #4d90fe;
+    background-color: ${var.primaryHover};
 }
 
 QPushButton.primary:pressed {
-    background-color: #307ffe;
+    background-color: ${var.primary};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
 }
 
+QPushButton.primary:disabled {
+    background-color: ${var.primary};
+    opacity: 0.6;
+}
+
+/* Secondary Button - For secondary actions */
+QPushButton.secondary {
+    background-color: ${var.secondary};
+    color: white;
+    border: none;
+}
+
+QPushButton.secondary:hover {
+    background-color: ${var.secondaryHover};
+}
+
+QPushButton.secondary:pressed {
+    background-color: ${var.secondary};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
+}
+
+/* Accent Button - For highlighting specific actions */
+QPushButton.accent {
+    background-color: ${var.accent};
+    color: white;
+    border: none;
+}
+
+QPushButton.accent:hover {
+    background-color: ${var.accentHover};
+}
+
+QPushButton.accent:pressed {
+    background-color: ${var.accent};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
+}
+
+/* Danger/Delete Button - For destructive actions */
 QPushButton.danger {
     background-color: ${var.error};
     color: white;
+    border: none;
 }
 
 QPushButton.danger:hover {
-    background-color: #ea5447;
+    background-color: #f44336; /* Slightly brighter red on hover */
 }
 
 QPushButton.danger:pressed {
-    background-color: #d13f32;
+    background-color: ${var.error};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
+}
+
+/* Success Button - For confirming actions */
+QPushButton.success {
+    background-color: ${var.success};
+    color: white;
+    border: none;
+}
+
+QPushButton.success:hover {
+    background-color: #33d979; /* Slightly brighter green on hover */
+}
+
+QPushButton.success:pressed {
+    background-color: ${var.success};
+    padding: 11px 15px 9px 17px; /* Slight offset when pressed */
+}
+
+/* Flat Button - For less prominent actions */
+QPushButton.flat {
+    background-color: transparent;
+    border: none;
+    color: ${var.primary};
+}
+
+QPushButton.flat:hover {
+    color: ${var.primaryHover};
+    background-color: rgba(67, 97, 238, 0.1); /* Transparent primary with low opacity */
+}
+
+QPushButton.flat:pressed {
+    color: ${var.primaryHover};
+    background-color: rgba(67, 97, 238, 0.2); /* Slightly more visible when pressed */
+}
+
+/* Size variants */
+QPushButton.small {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-height: 16px;
+    min-width: 60px;
+}
+
+QPushButton.large {
+    padding: 12px 24px;
+    font-size: 16px;
+    min-height: 24px;
+    min-width: 100px;
+}
+
+/* Card navigation buttons */
+QPushButton.card-nav-button {
+    min-width: 60px; 
+    min-height: 36px; 
+    padding: 10px 20px; 
+    font-weight: bold;
+    margin: 10px; 
+    border-radius: 8px;
+}
+
+/* Correct button in flashcard view */
+QPushButton.correct-button {
+    background-color: ${var.success};
+    padding: 12px 24px; 
+    margin: 0 20px; 
+    color: white;
+    border-radius: 8px;
+}
+
+QPushButton.correct-button:hover {
+    background-color: #33d979; /* Slightly brighter green on hover */
+}
+
+QPushButton.incorrect-button {
+    background-color: ${var.error};
+    padding: 12px 24px; 
+    margin: 0 20px; 
+    color: white;
+    border-radius: 8px;
+}
+
+QPushButton.incorrect-button:hover {
+    background-color: #f44336; /* Slightly brighter red on hover */
+}
+
+/* Icon Buttons */
+QPushButton.icon-button {
+    background-color: transparent;
+    border: none;
+    padding: 8px;
+    min-width: 32px;
+    min-height: 32px;
+    border-radius: 16px;
+}
+
+QPushButton.icon-button:hover {
+    background-color: ${var.backgroundAlt};
+}
+
+/* Tool buttons */
+QToolButton {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+QToolButton:hover {
+    background-color: ${var.backgroundAlt};
+}
+
+QToolButton:pressed {
+    background-color: ${var.border};
+}
+
+QToolButton:checked {
+    background-color: ${var.primaryHover};
+    color: white;
 }

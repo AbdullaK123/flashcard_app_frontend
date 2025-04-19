@@ -1,16 +1,17 @@
-
+/* Modern Form Styling */
 
 QFormLayout {
-    rowSpacing: 10;
-    columnSpacing: 15;
+    rowSpacing: 16;
+    columnSpacing: 20;
 }
 
 QFormLayout QLabel {
     /* Style form labels */
-    font-weight: bold;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    font-weight: 500;
+    color: ${var.textLight};
+    padding-right: 12px;
+    padding-top: 12px;
+    padding-bottom: 8px;
     /* Align labels to the top and left */
     qproperty-alignment: 'AlignTop | AlignLeft';
 }
@@ -20,48 +21,188 @@ QFormLayout QTextEdit,
 QFormLayout QSpinBox,
 QFormLayout QComboBox {
     border: 1px solid ${var.border};
-    border-radius: 3px;
-    padding: 5px;
+    border-radius: 8px;
+    padding: 10px 12px;
     selection-background-color: ${var.primary};
-    background-color: ${var.background};
+    selection-color: white;
+    background-color: ${var.inputBackground};
     color: ${var.foreground};
-    margin-top: 2px;
-    margin-bottom: 2px;
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
+/* Focus states for form elements */
+QFormLayout QLineEdit:focus,
+QFormLayout QTextEdit:focus,
+QFormLayout QSpinBox:focus,
+QFormLayout QComboBox:focus {
+    border: 2px solid ${var.primary};
+    padding: 9px 11px; /* Adjust padding to maintain size with border change */
+}
+
+/* Hover states for form elements */
+QFormLayout QLineEdit:hover:!focus,
+QFormLayout QTextEdit:hover:!focus,
+QFormLayout QSpinBox:hover:!focus,
+QFormLayout QComboBox:hover:!focus {
+    border: 1px solid ${var.borderDark};
+    background-color: ${var.backgroundAlt};
+}
+
+/* Disabled states for form elements */
+QFormLayout QLineEdit:disabled,
+QFormLayout QTextEdit:disabled,
+QFormLayout QSpinBox:disabled,
+QFormLayout QComboBox:disabled {
+    background-color: ${var.backgroundAlt};
+    color: ${var.textMuted};
+    border-color: ${var.border};
+}
+
+/* Line edit sizing */
 QFormLayout QLineEdit {
-    min-height: 24px; 
+    min-height: 26px; 
 }
 
+/* Text edit sizing */
 QFormLayout QTextEdit {
-    min-height: 80px;
+    min-height: 100px;
 }
 
+/* Spin box styling */
 QFormLayout QSpinBox {
-    min-height: 24px;
+    min-height: 26px;
+    padding-right: 24px; /* Make room for buttons */
 }
 
+QFormLayout QSpinBox::up-button,
+QFormLayout QSpinBox::down-button {
+    width: 20px;
+    border-radius: 4px;
+    border: none;
+    background-color: ${var.backgroundAlt};
+}
+
+QFormLayout QSpinBox::up-button:hover,
+QFormLayout QSpinBox::down-button:hover {
+    background-color: ${var.borderDark};
+}
+
+QFormLayout QSpinBox::up-arrow {
+    image: url(arrow-up.png);
+    width: 10px;
+    height: 10px;
+}
+
+QFormLayout QSpinBox::down-arrow {
+    image: url(arrow-down.png);
+    width: 10px;
+    height: 10px;
+}
+
+/* Combo box styling */
 QFormLayout QComboBox {
-    min-height: 24px;
+    min-height: 26px;
 }
 
-QFormLayout QCheckBox {
-    margin-top: 5px;
-    margin-bottom: 5px;
+QFormLayout QComboBox::drop-down {
+    border: none;
+    width: 24px;
 }
 
-QGroupBox {
-    margin-top: 1em;
-    margin-bottom: 1em;
+QFormLayout QComboBox::down-arrow {
+    image: url(arrow-down.png);
+    width: 12px;
+    height: 12px;
+}
+
+QFormLayout QComboBox QAbstractItemView {
     border: 1px solid ${var.border};
-    border-radius: 5px;
+    border-radius: 8px;
+    background-color: ${var.background};
+    selection-background-color: ${var.primary};
+    selection-color: white;
+    padding: 4px;
+    outline: none;
+}
+
+/* Checkbox styling */
+QFormLayout QCheckBox {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    min-height: 26px;
+}
+
+QFormLayout QCheckBox::indicator {
+    width: 20px;
+    height: 20px;
+    border: 1px solid ${var.border};
+    border-radius: 4px;
+    background-color: ${var.inputBackground};
+}
+
+QFormLayout QCheckBox::indicator:checked {
+    background-color: ${var.primary};
+    border-color: ${var.primary};
+    image: url(check.png);
+}
+
+QFormLayout QCheckBox::indicator:hover {
+    border-color: ${var.borderDark};
+}
+
+/* Group box styling */
+QGroupBox {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    border: 1px solid ${var.border};
+    border-radius: 8px;
+    padding: 24px 16px 16px 16px;
+    background-color: ${var.cardBackground};
 }
 
 QGroupBox::title {
     subcontrol-origin: margin;
-    left: 10px;
-    padding: 0 3px;
-    color: ${var.foreground};
+    left: 16px;
+    top: -12px;
+    padding: 0 8px;
+    background-color: ${var.background};
+    color: ${var.textLight};
     font-weight: bold;
 }
 
+/* Form sections and dividers */
+QFrame.form-divider {
+    border: none;
+    border-top: 1px solid ${var.border};
+    margin: 16px 0;
+}
+
+QLabel.form-section-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: ${var.textLight};
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+/* Required field indicator */
+QLabel.required::after {
+    content: " *";
+    color: ${var.error};
+}
+
+/* Form validation error messages */
+QLabel.error-message {
+    color: ${var.error};
+    font-size: 12px;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* Help text styling */
+QLabel.help-text {
+    color: ${var.textMuted};
+    font-size: 12px;
+    margin-top: 4px;
+}

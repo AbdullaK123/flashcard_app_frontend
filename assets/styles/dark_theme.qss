@@ -1,96 +1,216 @@
-/* Dark theme overrides */
+/* Modern Dark Theme Overrides - Fixed for PyQt */
 
 QWidget {
     background-color: ${dark.background};
     color: ${dark.foreground};
 }
 
-/* Fix hover states specifically for buttons and list items */
+/* Button hover states */
 QPushButton:hover {
-    background-color: #606060;
-    color: #202020; /* Dark text for contrast */
+    background-color: #424242;
+    color: ${dark.foreground};
 }
 
 QPushButton.primary:hover {
-    color: #202020; /* Dark text on primary button hover */
+    background-color: ${dark.primaryHover};
+    color: white;
+}
+
+QPushButton.secondary:hover {
+    background-color: ${dark.secondaryHover};
+    color: white;
 }
 
 QPushButton.danger:hover {
-    color: #202020; /* Dark text on danger button hover */
+    background-color: #f44336;
+    color: white;
 }
 
-QListWidget::item:hover {
-    background-color: #606060;
-    color: #202020; /* Dark text on hover */
+QPushButton.success:hover {
+    background-color: #33d979;
+    color: white;
 }
 
-/* Improved table styling for dark theme */
+QPushButton.flat:hover {
+    background-color: rgba(67, 97, 238, 0.2);
+    color: ${dark.primaryHover};
+}
+
+/* List item styling for dark theme */
+QListWidget {
+    background-color: ${dark.cardBackground};
+    color: ${dark.foreground};
+    border-color: ${dark.border};
+    alternate-background-color: ${dark.cardBackground}; /* Force same color for alternating rows */
+}
+
+QListWidget::item {
+    border-bottom: 1px solid ${dark.border};
+    background-color: ${dark.cardBackground}; /* Force same background color */
+}
+
+
+/* Table styling for dark theme */
 QTableWidget {
-    background-color: #2d2d2d;
-    alternate-background-color: #323232;
+    background-color: ${dark.cardBackground};
+    alternate-background-color: ${dark.cardBackground};
     color: ${dark.foreground};
     border-color: ${dark.border};
     gridline-color: #444444;
-    border-radius: 5px;
-}
-
-/* Table headers styling */
-QHeaderView {
-    background-color: #2a2a2a;
 }
 
 QHeaderView::section {
-    background-color: #2a2a2a;  /* Darker background for headers */
+    background-color: #333333;
     color: ${dark.foreground};
     border: 1px solid #444444;
-    padding: 4px;
 }
 
-QHeaderView::section:checked {
-    background-color: #383838;
-}
-
-/* Table corner button (where row and column headers meet) */
 QTableWidget QTableCornerButton::section {
-    background-color: #2a2a2a;
+    background-color: #333333;
     border: 1px solid #444444;
 }
 
-/* Row numbers (vertical header) */
 QTableView::item:selected {
     background-color: ${dark.primary};
     color: white;
 }
 
-/* Table alternating rows */
 QTableWidget::item:alternate {
-    background-color: #323232;
+    background-color: ${dark.cardBackground}
 }
 
-/* Standard dark theme styling for other elements */
-QProgressBar {
-    background-color: #333333;
-    color: ${dark.foreground};
-    border-color: ${dark.border};
-}
-
-QListWidget {
-    background-color: #2d2d2d;
-    alternate-background-color: #323232;
+/* Form elements for dark theme */
+QLineEdit, QTextEdit, QPlainTextEdit, QSpinBox, QDoubleSpinBox, QComboBox {
+    background-color: ${dark.inputBackground};
     color: ${dark.foreground};
     border: 1px solid ${dark.border};
 }
 
-QListWidget::item {
-    color: ${dark.foreground};
-    border-bottom: 1px solid #444444;
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus, QSpinBox:focus, QComboBox:focus {
+    border: 1px solid ${dark.primary};
 }
 
-QListWidget::item:alternate {
-    background-color: #323232;
+QLineEdit:hover:!focus, QTextEdit:hover:!focus, QSpinBox:hover:!focus, QComboBox:hover:!focus {
+    border: 1px solid ${dark.borderDark};
 }
 
-QListWidget::item:selected {
+/* Group box in dark theme */
+QGroupBox {
+    border: 1px solid ${dark.border};
+}
+
+QGroupBox::title {
+    background-color: ${dark.background};
+    color: ${dark.textLight};
+}
+
+/* Progress bar */
+QProgressBar {
+    background-color: #333333;
+    color: white;
+    border-color: ${dark.border};
+    text-align: center;
+}
+
+QProgressBar::chunk {
     background-color: ${dark.primary};
-    color: black;
+}
+
+/* Tab widget */
+QTabWidget::pane {
+    border: 1px solid ${dark.border};
+    background-color: ${dark.background};
+}
+
+QTabBar::tab {
+    background-color: #333333;
+    color: ${dark.foreground};
+}
+
+QTabBar::tab:selected {
+    background-color: ${dark.primary};
+    color: white;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #424242;
+}
+
+/* Menu styling */
+QMenuBar {
+    background-color: ${dark.background};
+    color: ${dark.foreground};
+    border-bottom: 1px solid ${dark.border};
+}
+
+QMenuBar::item:selected {
+    background-color: #424242;
+}
+
+QMenu {
+    background-color: ${dark.background};
+    color: ${dark.foreground};
+    border: 1px solid ${dark.border};
+}
+
+QMenu::item:selected {
+    background-color: #424242;
+}
+
+/* Scrollbar styling */
+QScrollBar:vertical, QScrollBar:horizontal {
+    background-color: #333333;
+}
+
+QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+    background-color: #555555;
+}
+
+QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover {
+    background-color: #666666;
+}
+
+/* Dialog styling */
+QDialog {
+    background-color: ${dark.background};
+    color: ${dark.foreground};
+    border: 1px solid ${dark.border};
+}
+
+/* Card styling */
+QFrame.card {
+    background-color: ${dark.cardBackground};
+    border: 1px solid ${dark.border};
+    /* Removed box-shadow */
+}
+
+QFrame#flashcardFrame {
+    background-color: ${dark.cardBackground};
+    border: 1px solid ${dark.border};
+}
+
+/* Message box styling */
+QMessageBox {
+    background-color: ${dark.background};
+    color: ${dark.foreground};
+    border: 1px solid ${dark.border};
+}
+
+/* Tool tip styling */
+QToolTip {
+    background-color: ${dark.cardBackground};
+    color: ${dark.foreground};
+    border: 1px solid ${dark.border};
+}
+
+/* Status bar */
+QStatusBar {
+    background-color: #333333;
+    color: ${dark.foreground};
+    border-top: 1px solid ${dark.border};
+}
+
+/* Splitters */
+QSplitter::handle {
+    background-color: ${dark.border};
 }

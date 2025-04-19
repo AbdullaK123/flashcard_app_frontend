@@ -24,59 +24,75 @@ class HistoryView(ResponsiveView):
     
     @handle_errors(dialog_title="UI Error")
     def setup_ui(self):
-        """Set up the user interface with responsive design."""
+        """Set up the user interface with responsive design and modern styling."""
         # Main layout
         main_layout = self.keep_reference(QVBoxLayout(self))
-        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setContentsMargins(24, 24, 24, 24)
+        main_layout.setSpacing(16)
         
         # Title
         title_label = QLabel("Study History")
+        title_label.setProperty("class", "h1")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
         title_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         main_layout.addWidget(title_label)
         
+        # Subtitle
+        subtitle_label = QLabel("Track your progress and review past study sessions")
+        subtitle_label.setProperty("class", "subtitle")
+        subtitle_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        subtitle_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        main_layout.addWidget(subtitle_label)
+        
         # Filter controls in a horizontal layout
-        filter_layout = self.keep_reference(QHBoxLayout())
+        filter_container = QGroupBox("Filter Options")
+        filter_container.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        filter_layout = self.keep_reference(QHBoxLayout(filter_container))
+        filter_layout.setContentsMargins(16, 24, 16, 16)
+        filter_layout.setSpacing(16)
         
         # Deck selector
         deck_label = QLabel("Deck:")
+        deck_label.setProperty("class", "form-label")
         deck_label.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        filter_layout.addWidget(deck_label)
+        
         self.deck_combo = QComboBox()
         self.deck_combo.addItem("All Decks", None)
         self.deck_combo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        
-        filter_layout.addWidget(deck_label)
         filter_layout.addWidget(self.deck_combo)
         
         # Date range
         date_label = QLabel("Date Range:")
+        date_label.setProperty("class", "form-label")
         date_label.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        filter_layout.addWidget(date_label)
+        
         self.start_date = QDateEdit()
         self.start_date.setCalendarPopup(True)
         self.start_date.setDate(QDate.currentDate().addMonths(-1))
         self.start_date.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        filter_layout.addWidget(self.start_date)
+        
+        filter_layout.addWidget(QLabel("to"))
         
         self.end_date = QDateEdit()
         self.end_date.setCalendarPopup(True)
         self.end_date.setDate(QDate.currentDate().addDays(1))
         self.end_date.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        
-        filter_layout.addWidget(date_label)
-        filter_layout.addWidget(self.start_date)
-        filter_layout.addWidget(QLabel("to"))
         filter_layout.addWidget(self.end_date)
         
         filter_layout.addStretch(1)
         
         # Refresh button
         refresh_button = QPushButton("Refresh")
+        refresh_button.setProperty("class", "primary")
         refresh_button.clicked.connect(self.refresh_history)
         refresh_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         filter_layout.addWidget(refresh_button)
         
         # Add filter controls to main layout
-        main_layout.addLayout(filter_layout)
+        main_layout.addWidget(filter_container)
         
         # Create main vertical splitter
         self.main_splitter = QSplitter(Qt.Orientation.Vertical)
@@ -85,11 +101,14 @@ class HistoryView(ResponsiveView):
         
         # Statistics section
         stats_frame = QFrame()
+        stats_frame.setProperty("class", "stats-container")
         stats_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         stats_layout = self.keep_reference(QVBoxLayout(stats_frame))
+        stats_layout.setContentsMargins(16, 16, 16, 16)
+        stats_layout.setSpacing(16)
         
         stats_title = QLabel("Study Statistics")
-        stats_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        stats_title.setProperty("class", "h2")
         stats_title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         stats_layout.addWidget(stats_title)
         
@@ -100,8 +119,7 @@ class HistoryView(ResponsiveView):
         ])
         self.stats_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.stats_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
-        self.stats_table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        
+        self.stats_table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.MinimumExpanding)
         stats_layout.addWidget(self.stats_table)
         
         # Create horizontal splitter for sessions and cards
@@ -111,11 +129,14 @@ class HistoryView(ResponsiveView):
         
         # Sessions section
         sessions_frame = QFrame()
+        sessions_frame.setProperty("class", "card")
         sessions_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sessions_layout = self.keep_reference(QVBoxLayout(sessions_frame))
+        sessions_layout.setContentsMargins(16, 16, 16, 16)
+        sessions_layout.setSpacing(16)
         
         sessions_title = QLabel("Recent Study Sessions")
-        sessions_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        sessions_title.setProperty("class", "h2")
         sessions_title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         sessions_layout.addWidget(sessions_title)
         
@@ -128,21 +149,24 @@ class HistoryView(ResponsiveView):
         self.sessions_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.sessions_table.cellClicked.connect(self.on_session_selected)
         self.sessions_table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        
         sessions_layout.addWidget(self.sessions_table)
         
         # Cards section for the selected session
         cards_frame = QFrame()
+        cards_frame.setProperty("class", "card")
         cards_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         cards_layout = self.keep_reference(QVBoxLayout(cards_frame))
+        cards_layout.setContentsMargins(16, 16, 16, 16)
+        cards_layout.setSpacing(16)
         
         cards_title = QLabel("Session Cards")
-        cards_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        cards_title.setProperty("class", "h2")
         cards_title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         cards_layout.addWidget(cards_title)
         
         # Card list
         self.session_card_list = CardListWidget(show_toolbar=False, read_only=True)
+        self.session_card_list.setProperty("class", "card-list")
         self.session_card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         cards_layout.addWidget(self.session_card_list)
         
@@ -151,7 +175,7 @@ class HistoryView(ResponsiveView):
         self.bottom_splitter.addWidget(cards_frame)
         
         # Set sizes (60% sessions, 40% cards)
-        self.bottom_splitter.setSizes([600, 400])
+        self.bottom_splitter.setSizes([int(self.width() * 0.6), int(self.width() * 0.4)])
         
         # Add frames to main splitter
         self.main_splitter.addWidget(stats_frame)
@@ -168,6 +192,7 @@ class HistoryView(ResponsiveView):
         self.deck_combo.currentIndexChanged.connect(self.on_filter_changed)
         self.start_date.dateChanged.connect(self.on_filter_changed)
         self.end_date.dateChanged.connect(self.on_filter_changed)
+    
     
     def handle_resize(self, width, height):
         """Handle parent window resize to adjust layout dynamically."""

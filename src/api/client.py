@@ -17,7 +17,7 @@ class APIClient:
         self.timeout = timeout
     
     @handle_errors(show_dialog=False, log_exception=True)
-    async def generate_flashcards(self, topic: str, num_questions: int = 10) -> Optional[FlashCardResponse]:
+    async def generate_flashcards(self, topic: str, num_questions: int = 10, additional_notes: str = "") -> Optional[FlashCardResponse]:
         """
         Generate flashcards for a topic using the API.
         
@@ -31,7 +31,7 @@ class APIClient:
         self.logger.info(f"Generating flashcards for topic: {topic}")
         
         # Create request
-        request = FlashCardRequest(topic=topic, num_questions=num_questions)
+        request = FlashCardRequest(topic=topic, num_questions=num_questions, additional_notes=additional_notes)
         url = urljoin(self.base_url, "/generate_flashcards")
         
         # Make the API call

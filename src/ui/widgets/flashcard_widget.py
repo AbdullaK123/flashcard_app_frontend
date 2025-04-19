@@ -38,7 +38,7 @@ class FlashcardWidget(QWidget):
             QSizePolicy.Policy.Expanding, 
             QSizePolicy.Policy.Expanding
         )
-        self.card_frame.setMinimumHeight(300)
+        self.card_frame.setMinimumHeight(400)
         
         # Card layout
         card_layout = QVBoxLayout(self.card_frame)

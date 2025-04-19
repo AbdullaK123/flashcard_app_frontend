@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Any, Optional, List
 
 
@@ -28,12 +28,14 @@ class FlashCardRequest:
     """Represents a request to generate flashcards."""
     topic: str
     num_questions: int
+    additional_notes: Optional[str] = field(default="")
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             'topic': self.topic,
-            'num_questions': self.num_questions
+            'num_questions': self.num_questions,
+            'additional_notes': self.additional_notes
         }
 
 @dataclass

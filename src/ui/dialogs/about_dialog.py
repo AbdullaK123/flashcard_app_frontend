@@ -65,7 +65,7 @@ class AboutDialog(QDialog):
         layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
         
         # Copyright
-        copyright = QLabel("© 2025 Your Name")
+        copyright = QLabel("© 2025 Abdulla Kayyani")
         copyright.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(copyright)
         

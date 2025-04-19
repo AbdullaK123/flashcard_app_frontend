@@ -4,9 +4,10 @@ QFrame.card {
     border: 1px solid ${var.border};
     border-radius: 12px; 
     background-color: ${var.cardBackground};
-    padding: 40px;
-    min-height: 320px; 
-    margin: 20px; 
+    padding: 16px;
+    min-height: 240px; 
+    min-width: 600px;
+    margin: 10px 20px 10px 20px;
     /* Removed box-shadow */
 }
 

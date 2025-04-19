@@ -29,89 +29,95 @@ class HistoryView(ResponsiveView):
         main_layout = self.keep_reference(QVBoxLayout(self))
         main_layout.setContentsMargins(24, 24, 24, 24)
         main_layout.setSpacing(16)
-        
+
         # Title
         title_label = QLabel("Study History")
         title_label.setProperty("class", "h1")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         main_layout.addWidget(title_label)
-        
+
         # Subtitle
         subtitle_label = QLabel("Track your progress and review past study sessions")
         subtitle_label.setProperty("class", "subtitle")
         subtitle_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         subtitle_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         main_layout.addWidget(subtitle_label)
-        
+
         # Filter controls in a horizontal layout
         filter_container = QGroupBox("Filter Options")
         filter_container.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         filter_layout = self.keep_reference(QHBoxLayout(filter_container))
         filter_layout.setContentsMargins(16, 24, 16, 16)
         filter_layout.setSpacing(16)
-        
+
         # Deck selector
         deck_label = QLabel("Deck:")
         deck_label.setProperty("class", "form-label")
         deck_label.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         filter_layout.addWidget(deck_label)
-        
+
         self.deck_combo = QComboBox()
         self.deck_combo.addItem("All Decks", None)
         self.deck_combo.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         filter_layout.addWidget(self.deck_combo)
-        
+
         # Date range
         date_label = QLabel("Date Range:")
         date_label.setProperty("class", "form-label")
         date_label.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         filter_layout.addWidget(date_label)
-        
+
         self.start_date = QDateEdit()
         self.start_date.setCalendarPopup(True)
         self.start_date.setDate(QDate.currentDate().addMonths(-1))
         self.start_date.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         filter_layout.addWidget(self.start_date)
-        
+
         filter_layout.addWidget(QLabel("to"))
-        
+
         self.end_date = QDateEdit()
         self.end_date.setCalendarPopup(True)
         self.end_date.setDate(QDate.currentDate().addDays(1))
         self.end_date.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         filter_layout.addWidget(self.end_date)
-        
+
         filter_layout.addStretch(1)
-        
+
         # Refresh button
         refresh_button = QPushButton("Refresh")
         refresh_button.setProperty("class", "primary")
         refresh_button.clicked.connect(self.refresh_history)
         refresh_button.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         filter_layout.addWidget(refresh_button)
-        
+
         # Add filter controls to main layout
         main_layout.addWidget(filter_container)
-        
-        # Create main vertical splitter
-        self.main_splitter = QSplitter(Qt.Orientation.Vertical)
+
+        # --- Create main HORIZONTAL splitter ---
+        self.main_splitter = QSplitter(Qt.Orientation.Horizontal)
         self.main_splitter.setChildrenCollapsible(False)
         self.main_splitter.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        
+
+        # --- Create a widget for the left side (containing the two tables) ---
+        left_widget = QWidget()
+        left_layout = self.keep_reference(QVBoxLayout(left_widget))
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.setSpacing(16)
+
         # Statistics section
         stats_frame = QFrame()
-        stats_frame.setProperty("class", "stats-container")
-        stats_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        stats_frame.setProperty("class", "card")
+        stats_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         stats_layout = self.keep_reference(QVBoxLayout(stats_frame))
         stats_layout.setContentsMargins(16, 16, 16, 16)
         stats_layout.setSpacing(16)
-        
+
         stats_title = QLabel("Study Statistics")
         stats_title.setProperty("class", "h2")
         stats_title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         stats_layout.addWidget(stats_title)
-        
+
         # Statistics table
         self.stats_table = QTableWidget(0, 5)
         self.stats_table.setHorizontalHeaderLabels([
@@ -119,27 +125,25 @@ class HistoryView(ResponsiveView):
         ])
         self.stats_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.stats_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
-        self.stats_table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.MinimumExpanding)
+        self.stats_table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         stats_layout.addWidget(self.stats_table)
-        
-        # Create horizontal splitter for sessions and cards
-        self.bottom_splitter = QSplitter(Qt.Orientation.Horizontal)
-        self.bottom_splitter.setChildrenCollapsible(False)
-        self.bottom_splitter.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        
+
+        # Add stats frame to the left layout
+        left_layout.addWidget(stats_frame)
+
         # Sessions section
         sessions_frame = QFrame()
         sessions_frame.setProperty("class", "card")
-        sessions_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sessions_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         sessions_layout = self.keep_reference(QVBoxLayout(sessions_frame))
         sessions_layout.setContentsMargins(16, 16, 16, 16)
         sessions_layout.setSpacing(16)
-        
+
         sessions_title = QLabel("Recent Study Sessions")
         sessions_title.setProperty("class", "h2")
         sessions_title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         sessions_layout.addWidget(sessions_title)
-        
+
         # Sessions table
         self.sessions_table = QTableWidget(0, 6)
         self.sessions_table.setHorizontalHeaderLabels([
@@ -150,44 +154,40 @@ class HistoryView(ResponsiveView):
         self.sessions_table.cellClicked.connect(self.on_session_selected)
         self.sessions_table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sessions_layout.addWidget(self.sessions_table)
-        
-        # Cards section for the selected session
+
+        # Add sessions frame to the left layout
+        left_layout.addWidget(sessions_frame)
+
+        # Cards section for the selected session (right side)
         cards_frame = QFrame()
         cards_frame.setProperty("class", "card")
         cards_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         cards_layout = self.keep_reference(QVBoxLayout(cards_frame))
         cards_layout.setContentsMargins(16, 16, 16, 16)
         cards_layout.setSpacing(16)
-        
+
         cards_title = QLabel("Session Cards")
         cards_title.setProperty("class", "h2")
         cards_title.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         cards_layout.addWidget(cards_title)
-        
+
         # Card list
         self.session_card_list = CardListWidget(show_toolbar=False, read_only=True)
         self.session_card_list.setProperty("class", "card-list")
         self.session_card_list.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         cards_layout.addWidget(self.session_card_list)
-        
-        # Add frames to bottom splitter
-        self.bottom_splitter.addWidget(sessions_frame)
-        self.bottom_splitter.addWidget(cards_frame)
-        
-        # Set sizes (60% sessions, 40% cards)
-        self.bottom_splitter.setSizes([int(self.width() * 0.6), int(self.width() * 0.4)])
-        
-        # Add frames to main splitter
-        self.main_splitter.addWidget(stats_frame)
-        self.main_splitter.addWidget(self.bottom_splitter)
-        
-        # Set proportions for main splitter (25% stats, 75% detail)
-        self.main_splitter.setStretchFactor(0, 1)
-        self.main_splitter.setStretchFactor(1, 3)
-        
+
+        # --- Add widgets to the main horizontal splitter ---
+        self.main_splitter.addWidget(left_widget)
+        self.main_splitter.addWidget(cards_frame)
+
+        # Set initial sizes (adjust as needed, maybe give tables a bit more width initially)
+        initial_width = self.width() if self.width() > 0 else 800 # Use a default if width isn't available yet
+        self.main_splitter.setSizes([int(initial_width * 0.55), int(initial_width * 0.45)])
+
         # Add main splitter to layout
         main_layout.addWidget(self.main_splitter)
-        
+
         # Connect signals
         self.deck_combo.currentIndexChanged.connect(self.on_filter_changed)
         self.start_date.dateChanged.connect(self.on_filter_changed)
@@ -225,15 +225,27 @@ class HistoryView(ResponsiveView):
     def switch_to_compact_mode(self):
         """Switch to compact layout for smaller screens."""
         super().switch_to_compact_mode()
-        
-        # Simplify filter layout
+        # Adjust main splitter to vertical if screen is very narrow
+        if self.current_width < 700: # Example breakpoint for vertical split
+            if self.main_splitter.orientation() != Qt.Orientation.Vertical:
+                self.main_splitter.setOrientation(Qt.Orientation.Vertical)
+                # Adjust vertical proportions (e.g., 60% tables, 40% cards)
+                current_sizes = self.main_splitter.sizes()
+                total_height = sum(current_sizes) if sum(current_sizes) > 0 else self.current_height
+                if total_height > 0:
+                    self.main_splitter.setSizes([int(total_height * 0.6), int(total_height * 0.4)])
+
         self.reorganize_filter_controls()
     
     def switch_to_normal_mode(self):
         """Switch to normal layout for larger screens."""
         super().switch_to_normal_mode()
-        
-        # Restore standard filter layout
+        # Restore main splitter to horizontal
+        if self.main_splitter.orientation() != Qt.Orientation.Horizontal:
+             self.main_splitter.setOrientation(Qt.Orientation.Horizontal)
+             # Restore proportions based on current width via handle_resize
+             self.handle_resize(self.current_width, self.current_height)
+
         self.reorganize_filter_controls()
     
     def reorganize_filter_controls(self):

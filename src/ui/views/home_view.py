@@ -29,11 +29,12 @@ class WorkerSignals(QObject):
 class GenerateFlashcardsWorker(QRunnable):
     """Worker for generating flashcards in background thread."""
 
-    def __init__(self, api_client, topic, num_cards):
+    def __init__(self, api_client, topic, num_cards, additional_notes):
         super().__init__()
         self.api_client = api_client
         self.topic = topic
         self.num_cards = num_cards
+        self.additional_notes = additional_notes
         self.signals = WorkerSignals()
 
     @pyqtSlot()
@@ -50,7 +51,11 @@ class GenerateFlashcardsWorker(QRunnable):
 
             # Call the API
             response = loop.run_until_complete(
-                self.api_client.generate_flashcards(self.topic, self.num_cards)
+                self.api_client.generate_flashcards(
+                    self.topic, 
+                    self.num_cards, 
+                    self.additional_notes
+                )
             )
 
             # Emit response
@@ -324,7 +329,7 @@ class HomeView(ResponsiveView):
 
         # Add notes to topic if provided
         if notes:
-            topic = f"{topic}\n\nAdditional focus areas: {notes}"
+            topic = f"{topic}"
 
         # Show progress UI
         self.progress_bar.setVisible(True)
@@ -334,7 +339,7 @@ class HomeView(ResponsiveView):
         self.clear_button.setEnabled(False)
 
         # Create worker for background processing
-        worker = GenerateFlashcardsWorker(self.api_client, topic, num_cards)
+        worker = GenerateFlashcardsWorker(self.api_client, topic, num_cards, notes)
 
         # Connect signals
         worker.signals.finished.connect(self.on_generation_complete)
